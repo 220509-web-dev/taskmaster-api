@@ -1,28 +1,41 @@
-package com.revature.taskmaster.models;
+package com.revature.taskmaster.entities;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 /**
  * Represents a user record within the data source
  */
-public class User implements Comparable {
+@Entity // tells our ORM (Object Relational Mapper; in our case is Hibernate) that this is an object that maps to a relational entity
+@Table(name = "users") // optional annotation, used to specify a different name for the table that this entity maps to (otherwise it uses the class name)
+public class User implements Comparable<User> {
 
     /** A generated string of characters that is used to uniquely define a user record within the data source */
+    @Id
+    @Column(name = "user_id", nullable = false, unique = true) // optional annotation, used to specify the name and constraints of a column
     private String id;
 
     /** The given name of the user - must not be null or empty */
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
     /** The surname of the user - must not be null or empty */
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     /** The email address of the user - must be a valid email address and unique within the data source */
+    @Column(name = "email", nullable = false, unique = true)
     private String emailAddress;
 
     /** The username of the user - must be at least three characters long and unique within the data source */
+    @Column(nullable = false, unique = true)
     private String username;
 
     /** A hashed version of the password to the user's account - must be at least 8 characters long */
+    @Column(nullable = false, columnDefinition = "VARCHAR CHECK (LENGTH(password) >= 8)")
     private String password;
 
     public User() {
@@ -102,12 +115,10 @@ public class User implements Comparable {
      * @return
      */
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(User o) {
         if (this == o) return 0;
-        if (o == null || getClass() != o.getClass()) return 1;
-        User user = (User) o;
         if (getId() != null) {
-            return getId().compareTo(user.getId());
+            return getId().compareTo(o.getId());
         } else {
             return -1;
         }
