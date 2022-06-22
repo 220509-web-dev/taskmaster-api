@@ -31,7 +31,11 @@ public class User implements Comparable<User> {
     @Column(nullable = false, unique = true)
     private String username;
 
-    /** A hashed version of the password to the user's account - must be at least 8 characters long */
+    /**
+     * A hashed version of the password to the user's account - must be at least 8 characters long
+     * and include at least one uppercase character, one lowercase character, one number, and one
+     * special character
+     */
     @Column(nullable = false, columnDefinition = "VARCHAR CHECK (LENGTH(password) >= 8)")
     private String password;
 
@@ -47,13 +51,17 @@ public class User implements Comparable<User> {
         this.id = id;
     }
 
-
-    public User(String firstName, String lastName, String emailAddress, String username, String password, Role role) {
+    public User(String firstName, String lastName, String emailAddress, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
         this.username = username;
         this.password = password;
+    }
+
+
+    public User(String firstName, String lastName, String emailAddress, String username, String password, Role role) {
+        this(firstName, lastName, emailAddress, username, password);
         this.role = role;
     }
 

@@ -14,3 +14,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # do not enable all Actuator endpoints when deploying to prod (customer-facing)
