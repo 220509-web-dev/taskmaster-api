@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -34,8 +33,8 @@ public class TaskmasterApp implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        User user1 = new User(UUID.randomUUID().toString(), "Adam", "Inn", "adam.inn@revature", "admin", "revature");
-        User user2 = new User(UUID.randomUUID().toString(), "Tester", "McTesterson", "tester@revature", "tester", "test-password");
+        User user1 = new User(UUID.randomUUID().toString(), "Adam", "Inn", "adam.inn@revature", "admin", "revature", User.Role.ADMIN);
+        User user2 = new User(UUID.randomUUID().toString(), "Tester", "McTesterson", "tester@revature", "tester", "test-password", User.Role.TESTER);
         userRepo.saveAll(Arrays.asList(user1, user2));
 
         Task task1 = new Task("Task 1 Title", "Task 1 Description", 8, user2, Arrays.asList(user1, user2), "started");

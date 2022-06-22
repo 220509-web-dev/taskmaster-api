@@ -11,7 +11,7 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, String> {
     List<Task> findTasksByLabel(String label);
 
-//    @Query(nativeQuery = true, value = "SELECT * FROM tasks WHERE point_value = :pointValue") // JPQL
-    @Query(value = "from Task where pointValue = :pointValue") // JPQL
+//    @Query(nativeQuery = true, value = "SELECT * FROM tasks WHERE point_value = :pointValue")
+    @Query(value = "from Task where pointValue = :pointValue") // JPQL/HQL
     List<Task> customQuery(int pointValue);
 }

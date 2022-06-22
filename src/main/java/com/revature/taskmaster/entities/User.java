@@ -1,9 +1,6 @@
 package com.revature.taskmaster.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -38,6 +35,10 @@ public class User implements Comparable<User> {
     @Column(nullable = false, columnDefinition = "VARCHAR CHECK (LENGTH(password) >= 8)")
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
+
     public User() {
         super();
     }
@@ -47,16 +48,17 @@ public class User implements Comparable<User> {
     }
 
 
-    public User(String firstName, String lastName, String emailAddress, String username, String password) {
+    public User(String firstName, String lastName, String emailAddress, String username, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
-    public User(String id, String firstName, String lastName, String emailAddress, String username, String password) {
-        this(firstName, lastName, emailAddress, username, password);
+    public User(String id, String firstName, String lastName, String emailAddress, String username, String password, Role role) {
+        this(firstName, lastName, emailAddress, username, password, role);
         this.id = id;
     }
 
@@ -108,6 +110,14 @@ public class User implements Comparable<User> {
         this.password = password;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     /**
      * Users are compared by their ids.
      *
@@ -129,12 +139,12 @@ public class User implements Comparable<User> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(emailAddress, user.emailAddress) && Objects.equals(username, user.username) && Objects.equals(password, user.password);
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(emailAddress, user.emailAddress) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && role == user.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, emailAddress, username, password);
+        return Objects.hash(id, firstName, lastName, emailAddress, username, password, role);
     }
 
     @Override
@@ -146,7 +156,12 @@ public class User implements Comparable<User> {
                 ", emailAddress='" + emailAddress + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", role=" + role +
                 '}';
+    }
+
+    public enum Role {
+        ADMIN, MANAGER, DEV, TESTER, LOCKED;
     }
 
 }
