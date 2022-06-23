@@ -1,8 +1,12 @@
 package com.revature.taskmaster.user.dtos;
 
+import com.revature.taskmaster.task.dtos.TaskResponse;
 import com.revature.taskmaster.user.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -14,12 +18,15 @@ public class UserResponse {
     private String username;
     private String role;
 
+    private List<TaskResponse> createdTasks;
+
     public UserResponse(User user) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.username = user.getUsername();
         this.role = user.getRole().toString();
+        this.createdTasks = user.getCreatedTasks().stream().map(TaskResponse::new).collect(Collectors.toList());
     }
 
 }
