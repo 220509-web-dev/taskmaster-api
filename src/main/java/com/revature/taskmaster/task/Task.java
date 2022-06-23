@@ -1,4 +1,6 @@
-package com.revature.taskmaster.entities;
+package com.revature.taskmaster.task;
+
+import com.revature.taskmaster.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;

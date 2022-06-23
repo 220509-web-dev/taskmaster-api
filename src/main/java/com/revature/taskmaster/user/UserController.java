@@ -1,9 +1,8 @@
-package com.revature.taskmaster.controllers;
+package com.revature.taskmaster.user;
 
-import com.revature.taskmaster.dtos.NewUserRequest;
-import com.revature.taskmaster.dtos.ResourceCreationResponse;
-import com.revature.taskmaster.dtos.UserResponse;
-import com.revature.taskmaster.services.UserService;
+import com.revature.taskmaster.user.dtos.NewUserRequest;
+import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
+import com.revature.taskmaster.user.dtos.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.revature.taskmaster.util.exceptions;
+package com.revature.taskmaster.common.util.exceptions;
 
 public class ResourcePersistenceException extends RuntimeException {
 

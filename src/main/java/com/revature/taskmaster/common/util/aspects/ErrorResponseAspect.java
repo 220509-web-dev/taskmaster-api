@@ -1,8 +1,8 @@
-package com.revature.taskmaster.util.aspects;
+package com.revature.taskmaster.common.util.aspects;
 
-import com.revature.taskmaster.dtos.ErrorResponse;
-import com.revature.taskmaster.util.exceptions.ResourceNotFoundException;
-import com.revature.taskmaster.util.exceptions.ResourcePersistenceException;
+import com.revature.taskmaster.common.dtos.ErrorResponse;
+import com.revature.taskmaster.common.util.exceptions.ResourceNotFoundException;
+import com.revature.taskmaster.common.util.exceptions.ResourcePersistenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,4 +1,4 @@
-package com.revature.taskmaster.dtos;
+package com.revature.taskmaster.task.dtos;
 
 import java.util.Objects;
 

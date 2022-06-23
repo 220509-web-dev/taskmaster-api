@@ -1,6 +1,6 @@
-package com.revature.taskmaster.repos;
+package com.revature.taskmaster.user;
 
-import com.revature.taskmaster.entities.User;
+import com.revature.taskmaster.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

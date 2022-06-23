@@ -1,6 +1,6 @@
-package com.revature.taskmaster.dtos;
+package com.revature.taskmaster.user.dtos;
 
-import com.revature.taskmaster.entities.User;
+import com.revature.taskmaster.user.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

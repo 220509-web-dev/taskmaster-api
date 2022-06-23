@@ -1,4 +1,4 @@
-package com.revature.taskmaster.dtos;
+package com.revature.taskmaster.common.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

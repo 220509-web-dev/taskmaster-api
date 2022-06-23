@@ -1,12 +1,10 @@
-package com.revature.taskmaster.services;
+package com.revature.taskmaster.user;
 
-import com.revature.taskmaster.dtos.NewUserRequest;
-import com.revature.taskmaster.dtos.ResourceCreationResponse;
-import com.revature.taskmaster.dtos.UserResponse;
-import com.revature.taskmaster.entities.User;
-import com.revature.taskmaster.repos.UserRepository;
-import com.revature.taskmaster.util.exceptions.ResourceNotFoundException;
-import com.revature.taskmaster.util.exceptions.ResourcePersistenceException;
+import com.revature.taskmaster.user.dtos.NewUserRequest;
+import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
+import com.revature.taskmaster.user.dtos.UserResponse;
+import com.revature.taskmaster.common.util.exceptions.ResourceNotFoundException;
+import com.revature.taskmaster.common.util.exceptions.ResourcePersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

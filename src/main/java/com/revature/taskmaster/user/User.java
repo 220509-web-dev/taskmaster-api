@@ -1,4 +1,4 @@
-package com.revature.taskmaster.entities;
+package com.revature.taskmaster.user;
 
 import javax.persistence.*;
 import java.util.Objects;
