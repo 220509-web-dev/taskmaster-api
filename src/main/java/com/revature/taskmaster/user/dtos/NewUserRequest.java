@@ -32,4 +32,13 @@ public class NewUserRequest {
         return new User(firstName, lastName, email, username, password);
     }
 
+    @Override
+    public String toString() {
+        return "NewUserRequest{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                '}';
+    }
 }
