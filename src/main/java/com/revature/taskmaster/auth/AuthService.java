@@ -1,7 +1,7 @@
 package com.revature.taskmaster.auth;
 
 import com.revature.taskmaster.auth.dtos.AuthRequest;
-import com.revature.taskmaster.auth.dtos.AuthSuccessResponse;
+import com.revature.taskmaster.auth.dtos.Principal;
 import com.revature.taskmaster.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public AuthSuccessResponse authenticate(@Valid AuthRequest authRequest) {
+    public Principal authenticate(@Valid AuthRequest authRequest) {
         return null;
     }
 

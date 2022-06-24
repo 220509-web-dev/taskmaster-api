@@ -1,5 +1,7 @@
 package com.revature.taskmaster.user;
 
+import com.revature.taskmaster.auth.dtos.AuthRequest;
+import com.revature.taskmaster.common.util.exceptions.AuthenticationException;
 import com.revature.taskmaster.user.dtos.NewUserRequest;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
 import com.revature.taskmaster.user.dtos.UserResponse;
@@ -67,6 +69,12 @@ public class UserService {
 
         return new ResourceCreationResponse(newUser.getId());
 
+    }
+
+    public UserResponse authenticateUserCredentials(@Valid AuthRequest authRequest) {
+        return userRepo.findUserByUsernameAndPassword(authRequest.getUsername(), authRequest.getPassword())
+                       .map(UserResponse::new)
+                       .orElseThrow(AuthenticationException::new);
     }
 
 }
