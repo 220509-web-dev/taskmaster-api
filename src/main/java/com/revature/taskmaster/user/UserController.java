@@ -28,8 +28,8 @@ public class UserController {
 
     @GetMapping(produces = "application/json")
     public List<UserResponse> getAllUsers(@RequestHeader(value = "Authorization", required = false) String token) {
-        Principal requester = tokenService.extractTokenDetails(token)
-                                          .orElseThrow(() -> new AuthenticationException("No auth token found on request!"));
+
+        Principal requester = tokenService.extractTokenDetails(token);
 
         if (!requester.getAuthUserRole().equals("ADMIN")) {
             throw new AuthorizationException("You are not allowed to hit this endpoint based on your role!");
