@@ -1,6 +1,6 @@
 package com.revature.taskmaster.common.util.exceptions;
 
-public class TokenParseException extends RuntimeException {
+public class TokenParseException extends AuthenticationException {
 
     public TokenParseException(Throwable cause) {
         super("The provided token could not be parsed", cause);
