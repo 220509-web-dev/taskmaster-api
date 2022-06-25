@@ -4,6 +4,7 @@ import com.revature.taskmaster.auth.TokenService;
 import com.revature.taskmaster.auth.dtos.Principal;
 import com.revature.taskmaster.common.util.exceptions.AuthenticationException;
 import com.revature.taskmaster.common.util.exceptions.AuthorizationException;
+import com.revature.taskmaster.common.util.web.security.Secured;
 import com.revature.taskmaster.user.dtos.NewUserRequest;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
 import com.revature.taskmaster.user.dtos.UserResponse;
@@ -26,6 +27,7 @@ public class UserController {
         this.tokenService = tokenService;
     }
 
+    @Secured(allowedRoles = {"ADMIN"})
     @GetMapping(produces = "application/json")
     public List<UserResponse> getAllUsers(@RequestHeader(value = "Authorization", required = false) String token) {
 
