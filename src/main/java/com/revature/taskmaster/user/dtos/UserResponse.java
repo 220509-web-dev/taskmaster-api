@@ -18,15 +18,12 @@ public class UserResponse {
     private String username;
     private String role;
 
-    private List<TaskResponse> createdTasks;
-
     public UserResponse(User user) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.username = user.getUsername();
         this.role = user.getRole().toString();
-        this.createdTasks = user.getCreatedTasks().stream().map(TaskResponse::new).collect(Collectors.toList());
     }
 
 }
