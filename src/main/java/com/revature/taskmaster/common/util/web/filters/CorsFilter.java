@@ -1,4 +1,4 @@
-package com.revature.taskmaster.common.filters;
+package com.revature.taskmaster.common.util.web.filters;
 
 import org.springframework.stereotype.Component;
 
