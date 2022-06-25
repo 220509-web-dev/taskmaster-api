@@ -48,9 +48,6 @@ public class User implements Comparable<User> {
     @Column(name = "role")
     private Role role;
 
-    @OneToMany(mappedBy = "creator")
-    private List<Task> createdTasks;
-
     public User() {
         super();
         this.id = UUID.randomUUID().toString();

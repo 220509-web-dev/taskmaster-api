@@ -1,5 +1,6 @@
 package com.revature.taskmaster.user.dtos;
 
+import com.revature.taskmaster.common.util.RegexUtil;
 import com.revature.taskmaster.user.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ public class NewUserRequest {
     @Size(min = 3)
     private String username;
 
-    @Pattern(regexp = "\"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\"")
+    @Pattern(regexp=RegexUtil.PASSWORD)
     private String password;
 
     public User extractResource() {
