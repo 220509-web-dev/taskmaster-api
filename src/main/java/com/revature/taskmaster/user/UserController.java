@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -29,19 +30,12 @@ public class UserController {
     @Secured(allowedRoles = {"ADMIN"})
     @GetMapping(produces = "application/json")
     public List<UserResponsePayload> getAllUsers(@RequestHeader(value = "Authorization", required = false) String token) {
-
-        Principal requester = tokenService.extractTokenDetails(token);
-
-        if (!requester.getAuthUserRole().equals("ADMIN")) {
-            throw new AuthorizationException("You are not allowed to hit this endpoint based on your role!");
-        }
-
         return userService.fetchAllUsers();
     }
 
-    @GetMapping("/id/{userId}")
-    public UserResponsePayload getUserById(@PathVariable String userId) {
-        return userService.fetchUserById(userId);
+    @GetMapping("/search")
+    public List<UserResponsePayload> findBy(@RequestParam Map<String, String> params) {
+        return userService.search(params);
     }
 
     @ResponseStatus(HttpStatus.CREATED)

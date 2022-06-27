@@ -1,6 +1,7 @@
 package com.revature.taskmaster.user;
 
 import com.revature.taskmaster.auth.dtos.AuthRequest;
+import com.revature.taskmaster.common.datasource.EntitySearcher;
 import com.revature.taskmaster.common.util.exceptions.AuthenticationException;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.common.util.web.validators.groups.OnUpdate;
@@ -18,6 +19,8 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,10 +30,12 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepo;
+    private final EntitySearcher entitySearcher;
 
     @Autowired
-    public UserService(UserRepository userRepo) {
+    public UserService(UserRepository userRepo, EntitySearcher entitySearcher) {
         this.userRepo = userRepo;
+        this.entitySearcher = entitySearcher;
     }
 
     public List<UserResponsePayload> fetchAllUsers() {
@@ -40,23 +45,13 @@ public class UserService {
                        .collect(Collectors.toList());
     }
 
-    public List<UserResponsePayload> fetchUsersByRole(String role) {
-        return userRepo.findUsersByRole(role)
-                       .stream()
-                       .map(UserResponsePayload::new).
-                       collect(Collectors.toList());
-    }
-
-    public UserResponsePayload fetchUserById(String id) {
-        return userRepo.findById(id)
-                       .map(UserResponsePayload::new)
-                       .orElseThrow(ResourceNotFoundException::new);
-    }
-
-    public UserResponsePayload fetchUserByUsername(@Valid UsernameRequest request) {
-        return userRepo.findUserByUsername(request.getUsername())
-                       .map(UserResponsePayload::new)
-                       .orElseThrow(ResourceNotFoundException::new);
+    public List<UserResponsePayload> search(Map<String, String> requestParamMap) {
+        if (requestParamMap.isEmpty()) return fetchAllUsers();
+        Set<User> matchingUsers = entitySearcher.searchForEntity(requestParamMap, User.class);
+        if (matchingUsers.isEmpty()) throw new ResourceNotFoundException();
+        return matchingUsers.stream()
+                            .map(UserResponsePayload::new)
+                            .collect(Collectors.toList());
     }
 
     public boolean checkUsernameAvailability(@Valid UsernameRequest request) {
