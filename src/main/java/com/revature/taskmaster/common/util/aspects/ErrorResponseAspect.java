@@ -1,10 +1,7 @@
 package com.revature.taskmaster.common.util.aspects;
 
 import com.revature.taskmaster.common.dtos.ErrorResponse;
-import com.revature.taskmaster.common.util.exceptions.AuthenticationException;
-import com.revature.taskmaster.common.util.exceptions.AuthorizationException;
-import com.revature.taskmaster.common.util.exceptions.ResourceNotFoundException;
-import com.revature.taskmaster.common.util.exceptions.ResourcePersistenceException;
+import com.revature.taskmaster.common.util.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,6 +16,13 @@ import java.util.stream.Collectors;
 public class ErrorResponseAspect {
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleInvalidRequestExceptions(InvalidRequestException e) {
+        return new ErrorResponse(400, Collections.singletonList(e.getMessage()));
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationExceptions(ConstraintViolationException e) {
         return new ErrorResponse(400, e.getConstraintViolations()
                                        .stream()

@@ -54,12 +54,12 @@ public class UserService {
                             .collect(Collectors.toList());
     }
 
-    public boolean checkUsernameAvailability(@Valid UsernameRequest request) {
-        return userRepo.existsByUsername(request.getUsername());
+    public boolean isUsernameAvailability(@Valid UsernameRequest request) {
+        return !userRepo.existsByUsername(request.getUsername());
     }
 
-    public boolean checkEmailAvailability(@Valid EmailRequest request) {
-        return userRepo.existsByEmailAddress(request.getEmail());
+    public boolean isEmailAvailability(@Valid EmailRequest request) {
+        return !userRepo.existsByEmailAddress(request.getEmail());
     }
 
     public UserResponsePayload fetchUserByEmail(@Valid EmailRequest request) {

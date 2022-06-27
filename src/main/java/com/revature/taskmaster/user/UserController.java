@@ -1,14 +1,15 @@
 package com.revature.taskmaster.user;
 
-import com.revature.taskmaster.auth.TokenService;
-import com.revature.taskmaster.auth.dtos.Principal;
-import com.revature.taskmaster.common.util.exceptions.AuthorizationException;
+import com.revature.taskmaster.common.util.exceptions.InvalidRequestException;
 import com.revature.taskmaster.common.util.web.security.Secured;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
+import com.revature.taskmaster.user.dtos.EmailRequest;
 import com.revature.taskmaster.user.dtos.UserRequestPayload;
 import com.revature.taskmaster.user.dtos.UserResponsePayload;
+import com.revature.taskmaster.user.dtos.UsernameRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +20,10 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private final TokenService tokenService;
 
     @Autowired
-    public UserController(UserService userService, TokenService tokenService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.tokenService = tokenService;
     }
 
     @Secured(allowedRoles = {"ADMIN"})
@@ -36,6 +35,21 @@ public class UserController {
     @GetMapping("/search")
     public List<UserResponsePayload> findBy(@RequestParam Map<String, String> params) {
         return userService.search(params);
+    }
+
+    @GetMapping("/availability")
+    public ResponseEntity<Void> checkAvailability(@RequestParam(required = false) String username, @RequestParam(required = false) String email) {
+        if (username != null) {
+            return userService.isUsernameAvailability(new UsernameRequest(username))
+                ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+        if (email != null ) {
+            return userService.isEmailAvailability(new EmailRequest(email))
+                    ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+        throw new InvalidRequestException("No email or username provided");
     }
 
     @ResponseStatus(HttpStatus.CREATED)
