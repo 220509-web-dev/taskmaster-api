@@ -17,29 +17,35 @@ import javax.validation.constraints.*;
 public class UserRequestPayload {
 
     @Null(
-        message = ValidatorMessageUtil.PROVIDE_NO_ID_FOR_USER_CREATION,
+        message = ValidatorMessageUtil.PROVIDE_NO_ID_ON_CREATE,
         groups = OnCreate.class)
     @NotNull(
-        message = ValidatorMessageUtil.ID_REQUIRED_FOR_USER_UPDATE,
+        message = ValidatorMessageUtil.ID_REQUIRED_ON_UPDATE,
         groups = OnUpdate.class)
     private String id;
 
     @Length(
+        message = ValidatorMessageUtil.FNAME_REQUIREMENTS,
         min = 1,
         groups = {
             OnCreate.class,
             OnUpdate.class
     })
-    @NotNull(groups = OnCreate.class)
+    @NotNull(
+        message = ValidatorMessageUtil.FNAME_REQUIRED_ON_CREATE,
+        groups = OnCreate.class)
     private String firstName;
 
     @Length(
+        message = ValidatorMessageUtil.LNAME_REQUIREMENTS,
         min = 1,
         groups = {
             OnCreate.class,
             OnUpdate.class
     })
-    @NotNull(groups = OnCreate.class)
+    @NotNull(
+        message = ValidatorMessageUtil.LNAME_REQUIRED_ON_CREATE,
+        groups = OnCreate.class)
     private String lastName;
 
     @Email(
@@ -48,7 +54,9 @@ public class UserRequestPayload {
             OnCreate.class,
             OnUpdate.class
     })
-    @NotNull(groups = OnCreate.class)
+    @NotNull(
+        message = ValidatorMessageUtil.EMAIL_REQUIRED_ON_CREATE,
+        groups = OnCreate.class)
     private String email;
 
     @Length(
@@ -58,7 +66,9 @@ public class UserRequestPayload {
             OnCreate.class,
             OnUpdate.class
     })
-    @NotNull(groups = OnCreate.class)
+    @NotNull(
+        message = ValidatorMessageUtil.USERNAME_REQUIRED_ON_CREATE,
+        groups = OnCreate.class)
     private String username;
 
     @Pattern(
@@ -68,11 +78,14 @@ public class UserRequestPayload {
             OnCreate.class,
             OnUpdate.class
     })
-    @NotNull(groups = OnCreate.class)
+    @NotNull(
+        message = ValidatorMessageUtil.PASSWORD_REQUIRED_ON_CREATE,
+        groups = OnCreate.class)
     private String password;
 
     @KnownRole(groups = OnUpdate.class)
-    @Null(groups = OnCreate.class)
+    @Null(message = ValidatorMessageUtil.PROVIDE_NO_ROLE_ON_CREATE,
+            groups = OnCreate.class)
     private String role;
 
     public User extractResource() {
