@@ -4,22 +4,7 @@ server:
     context-path: /taskmaster
 
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=taskmaster
-    username: postgres
-    password: revature
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
-    show-sql: false
-    hibernate:
-      ddl-auto: create-drop
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*" # do not enable all Actuator endpoints when deploying to prod (customer-facing)
-
-jwt:
-  secret: revature
+  application:
+    name: taskmaster-api
+  profiles:
+    default: local

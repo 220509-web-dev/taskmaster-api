@@ -6,4 +6,4 @@ target/
 *.jar
 *.war
 
-application.properties
+application-deploy.yml
