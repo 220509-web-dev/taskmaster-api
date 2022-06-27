@@ -5,10 +5,12 @@ import com.revature.taskmaster.common.util.exceptions.AuthenticationException;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.common.util.web.validators.groups.OnUpdate;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
+import com.revature.taskmaster.user.dtos.EmailRequest;
 import com.revature.taskmaster.user.dtos.UserRequestPayload;
 import com.revature.taskmaster.user.dtos.UserResponsePayload;
 import com.revature.taskmaster.common.util.exceptions.ResourceNotFoundException;
 import com.revature.taskmaster.common.util.exceptions.ResourcePersistenceException;
+import com.revature.taskmaster.user.dtos.UsernameRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,22 +53,22 @@ public class UserService {
                        .orElseThrow(ResourceNotFoundException::new);
     }
 
-    public UserResponsePayload fetchUserByUsername(String username) {
-        return userRepo.findUserByUsername(username)
+    public UserResponsePayload fetchUserByUsername(@Valid UsernameRequest request) {
+        return userRepo.findUserByUsername(request.getUsername())
                        .map(UserResponsePayload::new)
                        .orElseThrow(ResourceNotFoundException::new);
     }
 
-    public boolean checkUsernameAvailability(String username) {
-        return userRepo.existsByUsername(username);
+    public boolean checkUsernameAvailability(@Valid UsernameRequest request) {
+        return userRepo.existsByUsername(request.getUsername());
     }
 
-    public boolean checkEmailAvailability(String email) {
-        return userRepo.existsByEmailAddress(email);
+    public boolean checkEmailAvailability(@Valid EmailRequest request) {
+        return userRepo.existsByEmailAddress(request.getEmail());
     }
 
-    public UserResponsePayload fetchUserByEmail(String email) {
-        return userRepo.findUserByEmailAddress(email)
+    public UserResponsePayload fetchUserByEmail(@Valid EmailRequest request) {
+        return userRepo.findUserByEmailAddress(request.getEmail())
                        .map(UserResponsePayload::new)
                        .orElseThrow(ResourceNotFoundException::new);
     }
