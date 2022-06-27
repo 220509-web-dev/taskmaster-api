@@ -2,24 +2,25 @@ package com.revature.taskmaster.user;
 
 import com.revature.taskmaster.auth.dtos.AuthRequest;
 import com.revature.taskmaster.common.util.exceptions.AuthenticationException;
-import com.revature.taskmaster.user.dtos.NewUserRequest;
+import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
+import com.revature.taskmaster.common.util.web.validators.groups.OnUpdate;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
-import com.revature.taskmaster.user.dtos.UpdateUserRequest;
-import com.revature.taskmaster.user.dtos.UserResponse;
+import com.revature.taskmaster.user.dtos.UserRequestPayload;
+import com.revature.taskmaster.user.dtos.UserResponsePayload;
 import com.revature.taskmaster.common.util.exceptions.ResourceNotFoundException;
 import com.revature.taskmaster.common.util.exceptions.ResourcePersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Validated
 @Transactional // implies @Transactional on all methods in this class
 public class UserService {
 
@@ -30,39 +31,48 @@ public class UserService {
         this.userRepo = userRepo;
     }
 
-    public List<UserResponse> fetchAllUsers() {
+    public List<UserResponsePayload> fetchAllUsers() {
         return userRepo.findAll()
                        .stream()
-                       .map(UserResponse::new)
+                       .map(UserResponsePayload::new)
                        .collect(Collectors.toList());
     }
 
-    public List<UserResponse> fetchUsersByRole(String role) {
+    public List<UserResponsePayload> fetchUsersByRole(String role) {
         return userRepo.findUsersByRole(role)
                        .stream()
-                       .map(UserResponse::new).
+                       .map(UserResponsePayload::new).
                        collect(Collectors.toList());
     }
 
-    public UserResponse fetchUserById(String id) {
+    public UserResponsePayload fetchUserById(String id) {
         return userRepo.findById(id)
-                       .map(UserResponse::new)
+                       .map(UserResponsePayload::new)
                        .orElseThrow(ResourceNotFoundException::new);
     }
 
-    public UserResponse fetchUserByUsername(@Min(3) String username) {
+    public UserResponsePayload fetchUserByUsername(String username) {
         return userRepo.findUserByUsername(username)
-                       .map(UserResponse::new)
+                       .map(UserResponsePayload::new)
                        .orElseThrow(ResourceNotFoundException::new);
     }
 
-    public UserResponse fetchUserByEmail(@Email String email) {
+    public boolean checkUsernameAvailability(String username) {
+        return userRepo.existsByUsername(username);
+    }
+
+    public boolean checkEmailAvailability(String email) {
+        return userRepo.existsByEmailAddress(email);
+    }
+
+    public UserResponsePayload fetchUserByEmail(String email) {
         return userRepo.findUserByEmailAddress(email)
-                       .map(UserResponse::new)
+                       .map(UserResponsePayload::new)
                        .orElseThrow(ResourceNotFoundException::new);
     }
 
-    public ResourceCreationResponse createUser(@Valid NewUserRequest newUserRequest) {
+    @Validated(OnCreate.class)
+    public ResourceCreationResponse createUser(@Valid UserRequestPayload newUserRequest) {
 
         User newUser = newUserRequest.extractResource();
 
@@ -82,13 +92,47 @@ public class UserService {
 
     }
 
-    public void updateUser(@Valid UpdateUserRequest updateUserRequest) {
-        // TODO implement update
+    @Validated(OnUpdate.class)
+    public void updateUser(@Valid UserRequestPayload updatedUserRequest) {
+
+        User updatedUser = updatedUserRequest.extractResource();
+        User userForUpdate = userRepo.findById(updatedUser.getId()).orElseThrow(ResourceNotFoundException::new);
+
+        if (updatedUser.getFirstName() != null) {
+            userForUpdate.setFirstName(updatedUser.getFirstName());
+        }
+
+        if (updatedUser.getLastName() != null) {
+            userForUpdate.setLastName(updatedUser.getLastName());
+        }
+
+        if (updatedUser.getEmailAddress() != null) {
+            if (userRepo.existsByEmailAddress(updatedUser.getEmailAddress())) {
+                throw new ResourcePersistenceException("There is already a user with that email!");
+            }
+            userForUpdate.setEmailAddress(updatedUser.getEmailAddress());
+        }
+
+        if (updatedUser.getUsername() != null) {
+            if (userRepo.existsByUsername(updatedUser.getUsername())) {
+                throw new ResourcePersistenceException("There is already a user with that username!");
+            }
+            userForUpdate.setUsername(updatedUser.getUsername());
+        }
+
+        if (updatedUser.getPassword() != null) {
+            userForUpdate.setPassword(updatedUser.getPassword());
+        }
+
+        if (updatedUser.getRole() != null) {
+            userForUpdate.setRole(updatedUser.getRole());
+        }
+
     }
 
-    public UserResponse authenticateUserCredentials(@Valid AuthRequest authRequest) {
+    public UserResponsePayload authenticateUserCredentials(@Valid AuthRequest authRequest) {
         return userRepo.findUserByUsernameAndPassword(authRequest.getUsername(), authRequest.getPassword())
-                       .map(UserResponse::new)
+                       .map(UserResponsePayload::new)
                        .orElseThrow(AuthenticationException::new);
     }
 

@@ -1,16 +1,12 @@
 package com.revature.taskmaster.user.dtos;
 
-import com.revature.taskmaster.task.dtos.TaskResponse;
 import com.revature.taskmaster.user.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Data
 @NoArgsConstructor
-public class UserResponse {
+public class UserResponsePayload {
 
     private String id;
     private String firstName;
@@ -18,7 +14,7 @@ public class UserResponse {
     private String username;
     private String role;
 
-    public UserResponse(User user) {
+    public UserResponsePayload(User user) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();

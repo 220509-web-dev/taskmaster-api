@@ -72,9 +72,14 @@ public class User implements Comparable<User> {
         this.role = role;
     }
 
-    public User(String id, String firstName, String lastName, String emailAddress, String username, String password, Role role) {
-        this(firstName, lastName, emailAddress, username, password, role);
+    public User(String id, String firstName, String lastName, String emailAddress, String username, String password) {
+        this(firstName, lastName, emailAddress, username, password);
         this.id = id;
+    }
+
+    public User(String id, String firstName, String lastName, String emailAddress, String username, String password, Role role) {
+        this(id, firstName, lastName, emailAddress, username, password);
+        this.role = role;
     }
 
     public String getId() {

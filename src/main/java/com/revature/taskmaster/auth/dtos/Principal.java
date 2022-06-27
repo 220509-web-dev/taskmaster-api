@@ -1,6 +1,6 @@
 package com.revature.taskmaster.auth.dtos;
 
-import com.revature.taskmaster.user.dtos.UserResponse;
+import com.revature.taskmaster.user.dtos.UserResponsePayload;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +11,7 @@ public class Principal {
     private String authUserId;
     private String authUserRole;
 
-    public Principal(UserResponse user) {
+    public Principal(UserResponsePayload user) {
         this.authUserId = user.getId();
         this.authUserRole = user.getRole();
     }

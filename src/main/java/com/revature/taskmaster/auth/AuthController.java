@@ -3,7 +3,7 @@ package com.revature.taskmaster.auth;
 import com.revature.taskmaster.auth.dtos.AuthRequest;
 import com.revature.taskmaster.auth.dtos.Principal;
 import com.revature.taskmaster.user.UserService;
-import com.revature.taskmaster.user.dtos.UserResponse;
+import com.revature.taskmaster.user.dtos.UserResponsePayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +27,7 @@ public class AuthController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     public Principal authenticate(@RequestBody AuthRequest authRequest, HttpServletResponse resp) {
-        UserResponse authUser = userService.authenticateUserCredentials(authRequest);
+        UserResponsePayload authUser = userService.authenticateUserCredentials(authRequest);
         Principal payload = new Principal(authUser);
         String token = tokenService.generateToken(payload);
         resp.setHeader("Authorization", token);
