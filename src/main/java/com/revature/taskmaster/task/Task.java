@@ -1,5 +1,7 @@
 package com.revature.taskmaster.task;
 
+import com.revature.taskmaster.common.datasource.Resource;
+import com.revature.taskmaster.common.datasource.ResourceMetadata;
 import com.revature.taskmaster.user.User;
 
 import javax.persistence.*;
@@ -7,18 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Represents a task record within the data source
  */
 @Entity
 @Table(name = "tasks")
-public class Task implements Comparable<Task> {
-
-    /** A generated string of characters that is used to uniquely define a task record within the data source */
-    @Id
-    @Column(name = "task_id", nullable = false, unique = true)
-    private String id;
+public class Task extends Resource implements Comparable<Task> {
 
     /** A brief title for the task - must not be null or empty; maximum length of 50 characters */
     @Column(columnDefinition = "VARCHAR NOT NULL CHECK (LENGTH(title) <= 50)")
@@ -53,25 +51,7 @@ public class Task implements Comparable<Task> {
     public Task() {
         super();
         this.id = UUID.randomUUID().toString();
-    }
-
-    public Task(String title, String description, int pointValue, User creator, List<User> assignees) {
-        this();
-        this.title = title;
-        this.description = description;
-        this.pointValue = pointValue;
-        this.creator = creator;
-        this.assignees = assignees;
-    }
-
-    public Task(String title, String description, int pointValue, String creatorId, String label) {
-        this(title, description, pointValue, new User(creatorId), new ArrayList<>());
-        this.label = label;
-    }
-
-    public Task(String title, String description, int pointValue, User creator, String label) {
-        this(title, description, pointValue, creator, new ArrayList<>());
-        this.label = label;
+        this.metadata = new ResourceMetadata();
     }
 
     public Task(String title, String description, int pointValue, User creator, List<User> assignees, String label) {
@@ -176,10 +156,10 @@ public class Task implements Comparable<Task> {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", pointValue=" + pointValue +
-                ", creator=" + creator +
-                ", assignees=" + assignees +
-                ", label=" + label +
+                ", creatorId=" + creator.getId() +
+                ", assigneeIds=" + assignees.stream().map(User::getId).collect(Collectors.toList()) +
+                ", label='" + label + '\'' +
+                ", metadata=" + metadata +
                 '}';
     }
-
 }

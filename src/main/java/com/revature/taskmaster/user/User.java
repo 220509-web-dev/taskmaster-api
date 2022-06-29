@@ -1,10 +1,9 @@
 package com.revature.taskmaster.user;
 
-import com.revature.taskmaster.task.Task;
+import com.revature.taskmaster.common.datasource.Resource;
+import com.revature.taskmaster.common.datasource.ResourceMetadata;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -13,12 +12,7 @@ import java.util.UUID;
  */
 @Entity // tells our ORM (Object Relational Mapper; in our case is Hibernate) that this is an object that maps to a relational entity
 @Table(name = "users") // optional annotation, used to specify a different name for the table that this entity maps to (otherwise it uses the class name)
-public class User implements Comparable<User> {
-
-    /** A generated string of characters that is used to uniquely define a user record within the data source */
-    @Id
-    @Column(name = "user_id", nullable = false, unique = true) // optional annotation, used to specify the name and constraints of a column
-    private String id;
+public class User extends Resource implements Comparable<User> {
 
     /** The given name of the user - must not be null or empty */
     @Column(name = "first_name", nullable = false)
@@ -51,10 +45,7 @@ public class User implements Comparable<User> {
     public User() {
         super();
         this.id = UUID.randomUUID().toString();
-    }
-
-    public User(String id) {
-        this.id = id;
+        this.metadata = new ResourceMetadata();
     }
 
     public User(String firstName, String lastName, String emailAddress, String username, String password) {
@@ -66,20 +57,14 @@ public class User implements Comparable<User> {
         this.password = password;
     }
 
-
-    public User(String firstName, String lastName, String emailAddress, String username, String password, Role role) {
+    public User(String firstName, String lastName, String emailAddress, String username, String password, User.Role role) {
         this(firstName, lastName, emailAddress, username, password);
         this.role = role;
-    }
-
-    public User(String id, String firstName, String lastName, String emailAddress, String username, String password) {
-        this(firstName, lastName, emailAddress, username, password);
-        this.id = id;
     }
 
     public User(String id, String firstName, String lastName, String emailAddress, String username, String password, Role role) {
-        this(id, firstName, lastName, emailAddress, username, password);
-        this.role = role;
+        this(firstName, lastName, emailAddress, username, password, role);
+        this.id = id;
     }
 
     public String getId() {
@@ -159,8 +144,7 @@ public class User implements Comparable<User> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id)
-                && Objects.equals(firstName, user.firstName)
+        return Objects.equals(firstName, user.firstName)
                 && Objects.equals(lastName, user.lastName)
                 && Objects.equals(emailAddress, user.emailAddress)
                 && Objects.equals(username, user.username)
@@ -170,7 +154,7 @@ public class User implements Comparable<User> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, emailAddress, username, password, role);
+        return Objects.hash(firstName, lastName, emailAddress, username, password, role);
     }
 
     @Override
@@ -182,6 +166,8 @@ public class User implements Comparable<User> {
                 ", emailAddress='" + emailAddress + '\'' +
                 ", username='" + username + '\'' +
                 ", role=" + role +
+                ", id='" + id + '\'' +
+                ", metadata=" + metadata +
                 '}';
     }
 
