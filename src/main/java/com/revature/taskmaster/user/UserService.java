@@ -133,4 +133,8 @@ public class UserService {
                        .orElseThrow(AuthenticationException::new);
     }
 
+    public void removeUserById(String id) {
+        userRepo.deleteById(id);
+    }
+
 }

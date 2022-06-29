@@ -64,4 +64,11 @@ public class UserController {
         userService.updateUser(updatedUserInfo);
     }
 
+    @DeleteMapping
+    @Secured(allowedRoles = {"ADMIN"})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUserWithId(@RequestParam String id) {
+        userService.removeUserById(id);
+    }
+
 }
