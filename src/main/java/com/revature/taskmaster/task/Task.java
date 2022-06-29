@@ -33,7 +33,7 @@ public class Task implements Comparable<Task> {
     private int pointValue;
 
     /** The user who created this task - must not be null and have a valid/known user record id **/
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
 
