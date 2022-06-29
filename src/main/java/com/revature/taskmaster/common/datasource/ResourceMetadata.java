@@ -13,14 +13,14 @@ public class ResourceMetadata {
     @Column(name = "updated_datetime")
     private LocalDateTime updatedDatetime;
 
-    @Column(name = "creator_by")
-    private String creatorBy;
-
-    @Column(name = "last_modified_by")
-    private String lastModifiedBy;
-
     @Column(name = "is_active")
     private boolean active;
+
+    public ResourceMetadata() {
+        this.creationDatetime = LocalDateTime.now();
+        this.updatedDatetime = LocalDateTime.now();
+        this.active = false;
+    }
 
     public LocalDateTime getCreationDatetime() {
         return creationDatetime;
@@ -38,22 +38,6 @@ public class ResourceMetadata {
         this.updatedDatetime = updatedDatetime;
     }
 
-    public String getCreatorBy() {
-        return creatorBy;
-    }
-
-    public void setCreatorBy(String creatorBy) {
-        this.creatorBy = creatorBy;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
     public boolean isActive() {
         return active;
     }
@@ -67,8 +51,6 @@ public class ResourceMetadata {
         return "ResourceMetadata{" +
                 "creationDatetime=" + creationDatetime +
                 ", updatedDatetime=" + updatedDatetime +
-                ", creatorBy='" + creatorBy + '\'' +
-                ", lastModifiedBy='" + lastModifiedBy + '\'' +
                 ", active=" + active +
                 '}';
     }

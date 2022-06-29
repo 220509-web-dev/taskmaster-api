@@ -13,10 +13,10 @@ public abstract class Resource {
     @Id
     @Column(name = "resource_id")
     @GenericGenerator(name = "uuid", strategy = "uuid4")
-    private String id;
+    protected String id;
 
     @Embedded
-    private ResourceMetadata metadata;
+    protected ResourceMetadata metadata;
 
     public String getId() {
         return id;
@@ -26,4 +26,11 @@ public abstract class Resource {
         this.id = id;
     }
 
+    public ResourceMetadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(ResourceMetadata metadata) {
+        this.metadata = metadata;
+    }
 }
