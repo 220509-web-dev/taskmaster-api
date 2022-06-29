@@ -30,13 +30,24 @@ public class MockDataInserter implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        User user1 = new User(UUID.randomUUID().toString(), "Adam", "Inn", "adam.inn@revature.com", "admin", "Revature1!", User.Role.ADMIN);
-        User user2 = new User(UUID.randomUUID().toString(), "Tester", "McTesterson", "tester@revature.com", "tester", "Revature1!", User.Role.TESTER);
+
+        User user1 = new User("Adam", "Inn", "adam.inn@revature.com", "admin", "Revature1!", User.Role.ADMIN);
+        user1.getMetadata().setActive(true);
+
+        User user2 = new User("Tester", "McTesterson", "tester@revature.com", "tester", "Revature1!", User.Role.TESTER);
+        user2.getMetadata().setActive(true);
+
         userRepo.saveAll(Arrays.asList(user1, user2));
 
         Task task1 = new Task("Task 1 Title", "Task 1 Description", 8, user2, Arrays.asList(user1, user2), "started");
+        task1.getMetadata().setActive(true);
+
         Task task2 = new Task("Task 2 Title", "Task 2 Description", 3, user1, Collections.singletonList(user2), "started");
+        task2.getMetadata().setActive(true);
+
         Task task3 = new Task("Task 3 Title", "Task 3 Description", 12, user2, Collections.emptyList(), "not started");
+        task3.getMetadata().setActive(true);
+
         taskRepo.saveAll(Arrays.asList(task1, task2, task3));
 
     }
