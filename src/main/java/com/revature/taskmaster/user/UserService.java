@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -89,6 +90,13 @@ public class UserService {
 
     }
 
+    public void activateUser(String userId) {
+        userRepo.findById(userId)
+                .orElseThrow(ResourceNotFoundException::new)
+                .getMetadata()
+                .setActive(true);
+    }
+
     @Validated(OnUpdate.class)
     public void updateUser(@Valid UserRequestPayload updatedUserRequest) {
 
@@ -125,6 +133,8 @@ public class UserService {
             userForUpdate.setRole(updatedUser.getRole());
         }
 
+        userForUpdate.getMetadata().setUpdatedDatetime(LocalDateTime.now());
+
     }
 
     public UserResponsePayload authenticateUserCredentials(@Valid AuthRequest authRequest) {
@@ -133,8 +143,11 @@ public class UserService {
                        .orElseThrow(AuthenticationException::new);
     }
 
-    public void removeUserById(String id) {
-        userRepo.deleteById(id);
+    public void deactivateUser(String userId) {
+        userRepo.findById(userId)
+                .orElseThrow(ResourceNotFoundException::new)
+                .getMetadata()
+                .setActive(false);
     }
 
 }

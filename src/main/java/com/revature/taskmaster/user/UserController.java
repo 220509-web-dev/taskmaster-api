@@ -64,11 +64,17 @@ public class UserController {
         userService.updateUser(updatedUserInfo);
     }
 
+    @PatchMapping(value = "/activation")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void activateUser(@RequestParam String id) {
+        userService.activateUser(id);
+    }
+
     @DeleteMapping
     @Secured(allowedRoles = {"ADMIN"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUserWithId(@RequestParam String id) {
-        userService.removeUserById(id);
+    public void deactivateUser(@RequestParam String id) {
+        userService.deactivateUser(id);
     }
 
 }

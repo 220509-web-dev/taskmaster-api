@@ -84,18 +84,19 @@ public class UserRequestPayload {
     private String password;
 
     @KnownRole(groups = OnUpdate.class)
-    @Null(message = ValidatorMessageUtil.PROVIDE_NO_ROLE_ON_CREATE,
-            groups = OnCreate.class)
+    @Null(
+        message = ValidatorMessageUtil.PROVIDE_NO_ROLE_ON_CREATE,
+        groups = OnCreate.class)
     private String role;
 
     public User extractResource() {
 
         if (id == null) {
-            return new User(firstName, lastName, email, username, password);
+            return new User(firstName, lastName, email, username, password, User.Role.LOCKED);
         }
 
         if (role == null) {
-            return new User(id, firstName, lastName, email, username, password);
+            return new User(id, firstName, lastName, email, username, password, User.Role.LOCKED);
         }
 
         return new User(id, firstName, lastName, email, username, password, User.Role.valueOf(role));
