@@ -1,5 +1,6 @@
 package com.revature.taskmaster.task.dtos;
 
+import com.revature.taskmaster.common.dtos.ResourceMetadataPayload;
 import com.revature.taskmaster.task.Task;
 import com.revature.taskmaster.user.User;
 import lombok.Data;
@@ -20,6 +21,8 @@ public class TaskResponse {
     private List<String> assigneeIds;
     private String label;
 
+    private ResourceMetadataPayload metadata;
+
     public TaskResponse(Task task) {
         this.id = task.getId();
         this.title = task.getTitle();
@@ -28,5 +31,6 @@ public class TaskResponse {
         this.creatorId = task.getCreator().getId();
         this.assigneeIds = task.getAssignees().stream().map(User::getId).collect(Collectors.toList());
         this.label = task.getLabel();
+        this.metadata = new ResourceMetadataPayload(task.getMetadata());
     }
 }
