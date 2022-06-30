@@ -53,7 +53,7 @@ public class EntitySearcher {
                     predicate = getPredicate(cb, predicate, searchVal, searchField, root.get(searchKey));
                 }
             } catch (NoSuchFieldException e) {
-                throw new InvalidRequestException(String.format("No attribute with name: %s found on entity: %s", searchKey, entityClass.getName()));
+                throw new InvalidRequestException(String.format("No attribute with name: %s found on entity: %s", searchKey, entityClass.getSimpleName()));
             }
 
         }

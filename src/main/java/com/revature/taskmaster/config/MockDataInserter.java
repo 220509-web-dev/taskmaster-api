@@ -48,7 +48,10 @@ public class MockDataInserter implements CommandLineRunner {
         Task task3 = new Task("Task 3 Title", "Task 3 Description", 12, user2, Collections.emptyList(), "not started");
         task3.getMetadata().setActive(true);
 
-        taskRepo.saveAll(Arrays.asList(task1, task2, task3));
+        Task task4 = new Task("Task 4 Title", "Task 4 Description", 8, user2, Collections.emptyList(), "not started");
+        task3.getMetadata().setActive(true);
+
+        taskRepo.saveAll(Arrays.asList(task1, task2, task3, task4));
 
     }
 
