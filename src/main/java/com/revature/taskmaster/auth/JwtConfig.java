@@ -18,7 +18,7 @@ public class JwtConfig {
     @Value("#{24 * 60 * 60 * 1000}") // number of milliseconds in a day
     private int expiration;
 
-    private final SignatureAlgorithm sigAlg = SignatureAlgorithm.HS256;
+    private static final SignatureAlgorithm sigAlg = SignatureAlgorithm.HS256;
 
     private Key signingKey;
 

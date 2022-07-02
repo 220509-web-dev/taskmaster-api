@@ -4,25 +4,18 @@ import java.util.Objects;
 
 public class NewTaskRequest {
 
-    /** A generated string of characters that is used to uniquely define a task record within the data source */
     private String id;
 
-    /** A brief title for the task - must not be null or empty; maximum length of 50 characters */
     private String title;
 
-    /** A full description of the task - must not be null or empty */
     private String description;
 
-    /** The point value of this task - must be greater than 0 and less than 100 */
     private int pointValue;
 
-    /** The id of the user who created this task - must not be null and have a valid/known user record id **/
     private String creatorId;
 
-    /** The id of the user to whom this task is assigned - nullable, but if not null it must have a valid/known user record id */
     private String assigneeId;
 
-    /** A label used to describe this task and assist with filtering queries - must contain at least one value */
     private String label;
 
     public String getId() {

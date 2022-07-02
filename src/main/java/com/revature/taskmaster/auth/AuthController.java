@@ -16,19 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
     private final TokenService tokenService;
 
     @Autowired
-    public AuthController(UserService userService, TokenService tokenService) {
-        this.userService = userService;
+    public AuthController(AuthService authService, TokenService tokenService) {
+        this.authService = authService;
         this.tokenService = tokenService;
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     public Principal authenticate(@RequestBody AuthRequest authRequest, HttpServletResponse resp) {
-        UserResponsePayload authUser = userService.authenticateUserCredentials(authRequest);
-        Principal payload = new Principal(authUser);
+        Principal payload = authService.authenticateUserCredentials(authRequest);
         String token = tokenService.generateToken(payload);
         resp.setHeader("Authorization", token);
         return payload;
