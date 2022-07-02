@@ -1,7 +1,7 @@
 package com.revature.taskmaster.user.dtos;
 
 import com.revature.taskmaster.common.util.RegexUtil;
-import com.revature.taskmaster.common.util.web.validators.KnownRole;
+import com.revature.taskmaster.common.util.web.validators.annotations.KnownUserRole;
 import com.revature.taskmaster.common.util.web.validators.ValidatorMessageUtil;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.common.util.web.validators.groups.OnUpdate;
@@ -83,7 +83,7 @@ public class UserRequestPayload {
         groups = OnCreate.class)
     private String password;
 
-    @KnownRole(groups = OnUpdate.class)
+    @KnownUserRole(groups = OnUpdate.class)
     @Null(
         message = ValidatorMessageUtil.PROVIDE_NO_ROLE_ON_CREATE,
         groups = OnCreate.class)

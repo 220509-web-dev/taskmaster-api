@@ -1,8 +1,6 @@
 package com.revature.taskmaster.user;
 
-import com.revature.taskmaster.auth.dtos.AuthRequest;
 import com.revature.taskmaster.common.datasource.EntitySearcher;
-import com.revature.taskmaster.common.util.exceptions.AuthenticationException;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.common.util.web.validators.groups.OnUpdate;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
@@ -135,12 +133,6 @@ public class UserService {
 
         userForUpdate.getMetadata().setUpdatedDatetime(LocalDateTime.now());
 
-    }
-
-    public UserResponsePayload authenticateUserCredentials(@Valid AuthRequest authRequest) {
-        return userRepo.findUserByUsernameAndPassword(authRequest.getUsername(), authRequest.getPassword())
-                       .map(UserResponsePayload::new)
-                       .orElseThrow(AuthenticationException::new);
     }
 
     public void deactivateUser(String userId) {
