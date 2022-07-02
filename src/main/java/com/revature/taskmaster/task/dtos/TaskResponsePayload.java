@@ -16,10 +16,13 @@ public class TaskResponsePayload {
     private String id;
     private String title;
     private String description;
+    private int priority;
     private int pointValue;
+    private String dueDate;
+    private String state;
     private String creatorId;
     private List<String> assigneeIds;
-    private String label;
+    private List<String> labels;
 
     private ResourceMetadataPayload metadata;
 
@@ -27,10 +30,13 @@ public class TaskResponsePayload {
         this.id = task.getId();
         this.title = task.getTitle();
         this.description = task.getDescription();
+        this.priority = task.getPriority().getValue();
         this.pointValue = task.getPointValue();
+        this.dueDate = (task.getDueDate() != null) ? task.getDueDate().toString() : null;
+        this.state = task.getState().name();
         this.creatorId = task.getCreator().getId();
         this.assigneeIds = task.getAssignees().stream().map(User::getId).collect(Collectors.toList());
-        this.label = task.getLabel();
+        this.labels = task.getLabels();
         this.metadata = new ResourceMetadataPayload(task.getMetadata());
     }
 }

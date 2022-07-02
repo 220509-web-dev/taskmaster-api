@@ -21,16 +21,15 @@ public class Task extends Resource implements Comparable<Task> {
     private String title;
 
     /** A full description of the task - must not be null or empty */
-    @Column(nullable = false, columnDefinition = "VARCHAR NOT NULL CHECK (LENGTH(description) >= 1")
+    @Column(nullable = false, columnDefinition = "VARCHAR NOT NULL CHECK (LENGTH(description) >= 1)")
     private String description;
 
-    /** Used to determine how soon as task should be addressed. P1 = highest priority, P4 = lowest priority  - not nullable */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Priority priority;
 
     /** The point value of this task - must be greater or equal to than 0 and less than 100 if not null */
-    @Column(name = "point_value", columnDefinition = "INT DEFAULT 0 CHECK(point_value >= 0 AND point_value < 100)")
+    @Column(name = "point_value", columnDefinition = "INT CHECK(point_value >= 0 AND point_value < 100)")
     private int pointValue;
 
     /** The date when this task is expected to be completed by - nullable*/
