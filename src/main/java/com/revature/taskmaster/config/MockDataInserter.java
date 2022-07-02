@@ -39,16 +39,16 @@ public class MockDataInserter implements CommandLineRunner {
 
         userRepo.saveAll(Arrays.asList(user1, user2));
 
-        Task task1 = new Task("Task 1 Title", "Task 1 Description", 8, user2, Arrays.asList(user1, user2), "started");
+        Task task1 = new Task("Task 1 Title", "Task 1 Description", Task.Priority.P2, 8, Task.State.IN_PROGRESS, Arrays.asList("api", "data access", "jpa", "spring"), user2, Arrays.asList(user1, user2));
         task1.getMetadata().setActive(true);
 
-        Task task2 = new Task("Task 2 Title", "Task 2 Description", 3, user1, Collections.singletonList(user2), "started");
+        Task task2 = new Task("Task 2 Title", "Task 2 Description", Task.Priority.P3, 3, Task.State.IN_PROGRESS, Arrays.asList("ui", "react"), user1, Collections.singletonList(user2));
         task2.getMetadata().setActive(true);
 
-        Task task3 = new Task("Task 3 Title", "Task 3 Description", 12, user2, Collections.emptyList(), "not started");
+        Task task3 = new Task("Task 3 Title", "Task 3 Description", Task.Priority.P1, 12, Task.State.UNASSIGNED, Arrays.asList("important", "api", "security"), user2);
         task3.getMetadata().setActive(true);
 
-        Task task4 = new Task("Task 4 Title", "Task 4 Description", 8, user2, Collections.emptyList(), "not started");
+        Task task4 = new Task("Task 4 Title", "Task 4 Description", Task.Priority.P4, 8, Task.State.UNASSIGNED, Arrays.asList("api", "logging"), user2);
         task3.getMetadata().setActive(true);
 
         taskRepo.saveAll(Arrays.asList(task1, task2, task3, task4));
