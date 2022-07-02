@@ -17,4 +17,4 @@ management:
         include: "*" # do not enable all Actuator endpoints when deploying to prod (customer-facing)
 
 jwt:
-  secret: local-revature
+  secret: 5468576D5A7133743677397A24432646294A404E635266556A586E3272357537
