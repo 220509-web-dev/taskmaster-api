@@ -15,7 +15,9 @@ public class LoggingAspect {
     private final Logger logger = LogManager.getLogger();
 
     @Pointcut("within(com.revature.taskmaster..*)")
-    public void logAll() {}
+    public void logAll() {
+        // Empty because this acts as a pointcut reference
+    }
 
     @Before(value = "logAll()")
     public void logMethodStart(JoinPoint jp) {
