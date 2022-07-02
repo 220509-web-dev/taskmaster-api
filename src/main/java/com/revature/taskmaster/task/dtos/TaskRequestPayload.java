@@ -1,102 +1,94 @@
 package com.revature.taskmaster.task.dtos;
 
-import java.util.Objects;
+import com.revature.taskmaster.common.util.web.validators.ValidatorMessageUtil;
+import com.revature.taskmaster.common.util.web.validators.annotations.KnownPriorityLevel;
+import com.revature.taskmaster.common.util.web.validators.annotations.KnownTaskState;
+import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
+import com.revature.taskmaster.common.util.web.validators.groups.OnUpdate;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
-public class NewTaskRequest {
+import javax.validation.constraints.*;
+import java.time.LocalDate;
+import java.util.List;
 
+@Data
+@NoArgsConstructor
+public class TaskRequestPayload {
+
+    @Null(
+        message = ValidatorMessageUtil.PROVIDE_NO_ID_ON_CREATE,
+        groups = OnCreate.class)
+    @NotNull(
+        message = ValidatorMessageUtil.ID_REQUIRED_ON_UPDATE,
+        groups = OnUpdate.class)
     private String id;
 
+    @Length(
+        message = ValidatorMessageUtil.TASK_TITLE_REQUIREMENTS,
+        min = 1,
+        max = 50,
+        groups = {
+                OnCreate.class,
+                OnUpdate.class
+        })
+    @NotNull(
+        message = ValidatorMessageUtil.TASK_TITLE_REQUIRED_ON_CREATE,
+        groups = OnCreate.class)
     private String title;
 
+    @Length(
+            message = ValidatorMessageUtil.TASK_DESC_REQUIREMENTS,
+            min = 1,
+            groups = {
+                    OnCreate.class,
+                    OnUpdate.class
+            })
+    @NotNull(
+            message = ValidatorMessageUtil.TASK_DESC_REQUIRED_ON_CREATE,
+            groups = OnCreate.class)
     private String description;
 
+    @KnownPriorityLevel
+    @NotNull(groups = {OnCreate.class})
+    private int priority;
+
+    @Min(
+        message = ValidatorMessageUtil.TASK_POINT_REQUIREMENTS,
+        value = 1,
+        groups = {
+            OnCreate.class,
+            OnUpdate.class
+    })
+    @Max(
+        message = ValidatorMessageUtil.TASK_POINT_REQUIREMENTS,
+        value = 100,
+        groups = {
+            OnCreate.class,
+            OnUpdate.class
+    })
     private int pointValue;
+
+    @Future(
+        message = ValidatorMessageUtil.TASK_DUE_DATE_REQUIREMENTS,
+        groups = {
+            OnCreate.class,
+            OnUpdate.class
+    })
+    private LocalDate dueDate;
+
+    @KnownTaskState
+    private String state;
+
+    @NotNull(
+        message = ValidatorMessageUtil.TASK_LABELS_REQUIRED_ON_CREATE,
+        groups = {OnCreate.class})
+    private List<String> labels;
 
     private String creatorId;
 
-    private String assigneeId;
+    private List<String> assigneeIds;
 
-    private String label;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getPointValue() {
-        return pointValue;
-    }
-
-    public void setPointValue(int pointValue) {
-        this.pointValue = pointValue;
-    }
-
-    public String getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
-    }
-
-    public String getAssigneeId() {
-        return assigneeId;
-    }
-
-    public void setAssigneeId(String assigneeId) {
-        this.assigneeId = assigneeId;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        NewTaskRequest that = (NewTaskRequest) o;
-        return pointValue == that.pointValue && Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(creatorId, that.creatorId) && Objects.equals(assigneeId, that.assigneeId) && Objects.equals(label, that.label);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, description, pointValue, creatorId, assigneeId, label);
-    }
-
-    @Override
-    public String toString() {
-        return "NewTaskRequest{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", pointValue=" + pointValue +
-                ", creatorId='" + creatorId + '\'' +
-                ", assigneeId='" + assigneeId + '\'' +
-                ", label='" + label + '\'' +
-                '}';
-    }
 }

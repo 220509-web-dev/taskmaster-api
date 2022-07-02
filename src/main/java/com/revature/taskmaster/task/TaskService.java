@@ -2,7 +2,7 @@ package com.revature.taskmaster.task;
 
 import com.revature.taskmaster.common.datasource.EntitySearcher;
 import com.revature.taskmaster.common.util.exceptions.ResourceNotFoundException;
-import com.revature.taskmaster.task.dtos.TaskResponse;
+import com.revature.taskmaster.task.dtos.TaskResponsePayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,19 +25,19 @@ public class TaskService {
         this.entitySearcher = entitySearcher;
     }
 
-    public List<TaskResponse> fetchAllTasks() {
+    public List<TaskResponsePayload> fetchAllTasks() {
         return taskRepo.findAll()
                        .stream()
-                       .map(TaskResponse::new)
+                       .map(TaskResponsePayload::new)
                        .collect(Collectors.toList());
     }
 
-    public List<TaskResponse> search(Map<String, String> requestParamMap) {
+    public List<TaskResponsePayload> search(Map<String, String> requestParamMap) {
         if (requestParamMap.isEmpty()) return fetchAllTasks();
         Set<Task> tasks = entitySearcher.searchForEntity(requestParamMap, Task.class);
         if (tasks.isEmpty()) throw new ResourceNotFoundException();
         return tasks.stream()
-                    .map(TaskResponse::new)
+                    .map(TaskResponsePayload::new)
                     .collect(Collectors.toList());
     }
 

@@ -1,6 +1,6 @@
 package com.revature.taskmaster.task;
 
-import com.revature.taskmaster.task.dtos.TaskResponse;
+import com.revature.taskmaster.task.dtos.TaskResponsePayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,12 +22,12 @@ public class TaskController {
     }
 
     @GetMapping(produces = "application/json")
-    public List<TaskResponse> getAllTasks() {
+    public List<TaskResponsePayload> getAllTasks() {
         return taskService.fetchAllTasks();
     }
 
     @GetMapping(value = "/search", produces = "application/json")
-    public List<TaskResponse> findBy(@RequestParam Map<String, String> requestParams) {
+    public List<TaskResponsePayload> findBy(@RequestParam Map<String, String> requestParams) {
         return taskService.search(requestParams);
     }
 

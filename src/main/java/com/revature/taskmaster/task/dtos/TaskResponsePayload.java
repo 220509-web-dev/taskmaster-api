@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-public class TaskResponse {
+public class TaskResponsePayload {
 
     private String id;
     private String title;
@@ -23,7 +23,7 @@ public class TaskResponse {
 
     private ResourceMetadataPayload metadata;
 
-    public TaskResponse(Task task) {
+    public TaskResponsePayload(Task task) {
         this.id = task.getId();
         this.title = task.getTitle();
         this.description = task.getDescription();
