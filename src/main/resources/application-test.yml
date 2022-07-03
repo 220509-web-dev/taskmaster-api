@@ -1,0 +1,16 @@
+debug: true
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+
+jwt:
+  secret: 2B4B6250655368566D597133743677397A244326452948404D635166546A576E
