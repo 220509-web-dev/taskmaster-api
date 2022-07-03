@@ -44,7 +44,7 @@ class UserRegistrationIntegrationTest {
         String requestPayload = jsonMapper.writeValueAsString(newUserRequest);
 
         mockMvc.perform(post(PATH).contentType(CONTENT_TYPE).content(requestPayload))
-               .andExpect(status().is(201))
+               .andExpect(status().isCreated())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
                .andExpect(header().string("Access-Control-Allow-Methods", "*"))
