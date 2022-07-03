@@ -59,8 +59,6 @@ public class Task extends Resource implements Comparable<Task> {
     )
     private List<User> assignees;
 
-
-
     public Task() {
         super();
         this.id = UUID.randomUUID().toString();
@@ -69,107 +67,85 @@ public class Task extends Resource implements Comparable<Task> {
         this.metadata = new ResourceMetadata();
     }
 
-    public Task(String title, String description, Priority priority, User creator) {
-        this();
-        this.title = title;
-        this.description = description;
-        this.priority = priority;
-        this.pointValue = 0;
-        this.state = State.UNASSIGNED;
-        this.creator = creator;
-    }
-
-    public Task(String title, String description, Priority priority, State state, List<String> labels, User creator) {
-        this(title, description, priority, creator);
-        this.state = state;
-        this.labels = labels;
-    }
-
-    public Task(String title, String description, Priority priority, int pointValue, State state, List<String> labels, User creator) {
-        this(title, description, priority, state, labels, creator);
-        this.pointValue = pointValue;
-    }
-
-    public Task(String title, String description, Priority priority, int pointValue, State state, List<String> labels, User creator, List<User> assignees) {
-        this(title, description, priority, pointValue, state, labels, creator);
-        this.assignees = assignees;
-    }
-
-    public Task(String title, String description, Priority priority, int pointValue, LocalDate dueDate, State state, List<String> labels, User creator, List<User> assignees) {
-        this(title, description, priority, pointValue, state, labels, creator, assignees);
-        this.dueDate = dueDate;
-    }
-
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public Task setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public Task setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     public Priority getPriority() {
         return priority;
     }
 
-    public void setPriority(Priority priority) {
+    public Task setPriority(Priority priority) {
         this.priority = priority;
+        return this;
     }
 
     public int getPointValue() {
         return pointValue;
     }
 
-    public void setPointValue(int pointValue) {
+    public Task setPointValue(int pointValue) {
         this.pointValue = pointValue;
+        return this;
     }
 
     public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDate dueDate) {
+    public Task setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+        return this;
     }
 
     public State getState() {
         return state;
     }
 
-    public void setState(State state) {
+    public Task setState(State state) {
         this.state = state;
+        return this;
     }
 
     public List<String> getLabels() {
         return labels;
     }
 
-    public void setLabels(List<String> labels) {
+    public Task setLabels(List<String> labels) {
         this.labels = labels;
+        return this;
     }
 
     public User getCreator() {
         return creator;
     }
 
-    public void setCreator(User creator) {
+    public Task setCreator(User creator) {
         this.creator = creator;
+        return this;
     }
 
     public List<User> getAssignees() {
         return assignees;
     }
 
-    public void setAssignees(List<User> assignees) {
+    public Task setAssignees(List<User> assignees) {
         this.assignees = assignees;
+        return this;
     }
 
     @Override
