@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Validated
-@Transactional // implies @Transactional on all methods in this class
+@Transactional
 public class UserService {
 
     private final UserRepository userRepo;
@@ -53,11 +53,11 @@ public class UserService {
                             .collect(Collectors.toList());
     }
 
-    public boolean isUsernameAvailability(@Valid UsernameRequest request) {
+    public boolean isUsernameAvailable(@Valid UsernameRequest request) {
         return !userRepo.existsByUsername(request.getUsername());
     }
 
-    public boolean isEmailAvailability(@Valid EmailRequest request) {
+    public boolean isEmailAvailable(@Valid EmailRequest request) {
         return !userRepo.existsByEmailAddress(request.getEmail());
     }
 
