@@ -9,8 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -18,7 +18,9 @@ class UserAvailabilityIntegrationTest {
 
     private final MockMvc mockMvc;
 
-    private final String path = "/users/availability";
+    private final String PATH = "/users/availability";
+
+    private final String CONTENT_TYPE = "application/json";
 
     @Autowired
     public UserAvailabilityIntegrationTest(MockMvc mockMvc) {
@@ -28,47 +30,74 @@ class UserAvailabilityIntegrationTest {
     @Test
     void test_checkUsernameAvailability_returns204_givenValidAvailableUsername() throws Exception {
         String availableUsername = "available-username";
-        mockMvc.perform(get(path + "?username=" + availableUsername))
-                .andExpect(status().is(204))
-                .andReturn();
+        mockMvc.perform(get(PATH + "?username=" + availableUsername))
+               .andExpect(status().is(204))
+               .andExpect(header().doesNotExist("content-type"))
+               .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+               .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+               .andExpect(header().string("Access-Control-Allow-Headers", "*"))
+               .andReturn();
     }
 
     @Test
     void test_checkUsernameAvailability_returns409_givenValidUnavailableUsername() throws Exception {
         String unavailableUsername = "tester";
-        mockMvc.perform(get(path + "?username=" + unavailableUsername))
+        mockMvc.perform(get(PATH + "?username=" + unavailableUsername))
               .andExpect(status().is(409))
+              .andExpect(header().doesNotExist("content-type"))
+              .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+              .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+              .andExpect(header().string("Access-Control-Allow-Headers", "*"))
               .andReturn();
     }
 
     @Test
     void test_checkEmailAvailability_returns204_givenValidAvailableEmail() throws Exception {
         String availableEmail = "available-email@revature.com";
-        mockMvc.perform(get(path + "?email=" + availableEmail))
+        mockMvc.perform(get(PATH + "?email=" + availableEmail))
                .andExpect(status().is(204))
+               .andExpect(header().doesNotExist("content-type"))
+               .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+               .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+               .andExpect(header().string("Access-Control-Allow-Headers", "*"))
                .andReturn();
     }
 
     @Test
     void test_checkEmailAvailability_returns409_givenValidUnavailableEmail() throws Exception {
         String unavailableEmail = "tester@revature.com";
-        mockMvc.perform(get(path + "?email=" + unavailableEmail))
+        mockMvc.perform(get(PATH + "?email=" + unavailableEmail))
                .andExpect(status().is(409))
+               .andExpect(header().doesNotExist("content-type"))
+               .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+               .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+               .andExpect(header().string("Access-Control-Allow-Headers", "*"))
                .andReturn();
     }
 
     @Test
     void test_checkAvailability_returns400_whenNoUsernameOrEmailRequestParamsAreProvided() throws Exception {
-        mockMvc.perform(get(path))
+        mockMvc.perform(get(PATH))
                .andExpect(status().is(400))
+               .andExpect(header().string("content-type", CONTENT_TYPE))
+               .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+               .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+               .andExpect(header().string("Access-Control-Allow-Headers", "*"))
+               .andExpect(jsonPath("$.messages").isArray())
+               .andExpect(jsonPath("$.messages", hasSize(1)))
+               .andExpect(jsonPath("$.messages", hasItem("No email or username provided")))
                .andReturn();
     }
 
     @Test
     void test_checkUsernameAvailability_returns409_givenInvalidUsername() throws Exception {
         String invalidUsername = "t";
-        mockMvc.perform(get(path + "?username=" + invalidUsername))
+        mockMvc.perform(get(PATH + "?username=" + invalidUsername))
                .andExpect(status().is(400))
+               .andExpect(header().string("content-type", CONTENT_TYPE))
+               .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+               .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+               .andExpect(header().string("Access-Control-Allow-Headers", "*"))
                .andExpect(jsonPath("$.messages").isArray())
                .andExpect(jsonPath("$.messages", hasSize(1)))
                .andExpect(jsonPath("$.messages", hasItem("Usernames must contain at least three characters")))
@@ -78,8 +107,12 @@ class UserAvailabilityIntegrationTest {
     @Test
     void test_checkEmailAvailability_returns409_givenInvalidEmail() throws Exception {
         String invalidEmail = "not an email";
-        mockMvc.perform(get(path + "?email=" + invalidEmail))
+        mockMvc.perform(get(PATH + "?email=" + invalidEmail))
                .andExpect(status().is(400))
+               .andExpect(header().string("content-type", CONTENT_TYPE))
+               .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+               .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+               .andExpect(header().string("Access-Control-Allow-Headers", "*"))
                .andExpect(jsonPath("$.messages").isArray())
                .andExpect(jsonPath("$.messages", hasSize(1)))
                .andExpect(jsonPath("$.messages", hasItem("A valid email must be provided")))
@@ -88,29 +121,45 @@ class UserAvailabilityIntegrationTest {
 
     @Test
     void test_checkAvailabilityEndpoint_returns405_whenIncorrectHttpMethodUsed() throws Exception {
-        mockMvc.perform(post(path))
+        mockMvc.perform(post(PATH))
                .andExpect(status().is(405))
+               .andExpect(header().string("content-type", CONTENT_TYPE))
+               .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+               .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+               .andExpect(header().string("Access-Control-Allow-Headers", "*"))
                .andExpect(jsonPath("$.messages").isArray())
                .andExpect(jsonPath("$.messages", hasSize(1)))
                .andExpect(jsonPath("$.messages", hasItem("Request method 'POST' not supported")))
                .andReturn();
 
-        mockMvc.perform(put(path))
+        mockMvc.perform(put(PATH))
                .andExpect(status().is(405))
+               .andExpect(header().string("content-type", CONTENT_TYPE))
+               .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+               .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+               .andExpect(header().string("Access-Control-Allow-Headers", "*"))
                .andExpect(jsonPath("$.messages").isArray())
                .andExpect(jsonPath("$.messages", hasSize(1)))
                .andExpect(jsonPath("$.messages", hasItem("Request method 'PUT' not supported")))
                .andReturn();
 
-        mockMvc.perform(patch(path))
+        mockMvc.perform(patch(PATH))
                .andExpect(status().is(405))
+               .andExpect(header().string("content-type", CONTENT_TYPE))
+               .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+               .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+               .andExpect(header().string("Access-Control-Allow-Headers", "*"))
                .andExpect(jsonPath("$.messages").isArray())
                .andExpect(jsonPath("$.messages", hasSize(1)))
                .andExpect(jsonPath("$.messages", hasItem("Request method 'PATCH' not supported")))
                .andReturn();
 
-        mockMvc.perform(delete(path))
+        mockMvc.perform(delete(PATH))
                .andExpect(status().is(405))
+               .andExpect(header().string("content-type", CONTENT_TYPE))
+               .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+               .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+               .andExpect(header().string("Access-Control-Allow-Headers", "*"))
                .andExpect(jsonPath("$.messages").isArray())
                .andExpect(jsonPath("$.messages", hasSize(1)))
                .andExpect(jsonPath("$.messages", hasItem("Request method 'DELETE' not supported")))
