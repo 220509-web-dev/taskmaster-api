@@ -28,11 +28,6 @@ public class UserController {
 
     @Secured(allowedRoles = {"ADMIN"})
     @GetMapping(produces = "application/json")
-    public List<UserResponsePayload> getAllUsers(@RequestHeader(value = "Authorization", required = false) String token) {
-        return userService.fetchAllUsers();
-    }
-
-    @GetMapping("/search")
     public List<UserResponsePayload> findBy(@RequestParam Map<String, String> params) {
         return userService.search(params);
     }
