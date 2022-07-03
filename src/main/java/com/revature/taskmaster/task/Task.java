@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 public class Task extends Resource implements Comparable<Task> {
 
     /** A brief title for the task - must not be null or empty; maximum length of 50 characters */
-    @Column(nullable = false, columnDefinition = "VARCHAR NOT NULL CHECK (LENGTH(title) >= 1 AND LENGTH(title) <= 50)")
+    @Column(nullable = false)
     private String title;
 
     /** A full description of the task - must not be null or empty */
-    @Column(nullable = false, columnDefinition = "VARCHAR NOT NULL CHECK (LENGTH(description) >= 1)")
+    @Column(nullable = false)
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -29,7 +29,7 @@ public class Task extends Resource implements Comparable<Task> {
     private Priority priority;
 
     /** The point value of this task - must be greater or equal to than 0 and less than 100 if not null */
-    @Column(name = "point_value", columnDefinition = "INT CHECK(point_value >= 0 AND point_value < 100)")
+    @Column(name = "point_value")
     private int pointValue;
 
     /** The date when this task is expected to be completed by - nullable*/

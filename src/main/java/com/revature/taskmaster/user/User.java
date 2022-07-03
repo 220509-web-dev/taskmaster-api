@@ -35,7 +35,7 @@ public class User extends Resource implements Comparable<User> {
      * and include at least one uppercase character, one lowercase character, one number, and one
      * special character
      */
-    @Column(nullable = false, columnDefinition = "VARCHAR CHECK (LENGTH(password) >= 8)")
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
