@@ -12,10 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.UUID;
 
 @Component
-@Profile("local")
+@Profile("local || test")
 public class MockDataInserter implements CommandLineRunner {
 
     private final UserRepository userRepo;
@@ -29,27 +28,69 @@ public class MockDataInserter implements CommandLineRunner {
 
     @Override
     @Transactional
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
-        User user1 = new User("Adam", "Inn", "adam.inn@revature.com", "admin", "Revature1!", User.Role.ADMIN);
-        user1.getMetadata().setActive(true);
+        final String DEFAULT_PASSWORD = "Revature1!";
 
-        User user2 = new User("Tester", "McTesterson", "tester@revature.com", "tester", "Revature1!", User.Role.TESTER);
-        user2.getMetadata().setActive(true);
+        User adminUser = new User("Adam", "Inn", "adam.inn@revature.com", "admin", DEFAULT_PASSWORD, User.Role.ADMIN);
+        adminUser.getMetadata().setActive(true);
 
-        userRepo.saveAll(Arrays.asList(user1, user2));
+        User managerUser = new User("Manny", "Jerr", "manny@revature.com", "manny123", DEFAULT_PASSWORD, User.Role.MANAGER);
+        managerUser.getMetadata().setActive(true);
 
-        Task task1 = new Task("Task 1 Title", "Task 1 Description", Task.Priority.P2, 8, Task.State.IN_PROGRESS, Arrays.asList("api", "data access", "jpa", "spring"), user2, Arrays.asList(user1, user2));
+        User devUser = new User("Devin", "Loper", "dev.loper@revature.com", "dev", DEFAULT_PASSWORD, User.Role.DEV);
+        devUser.getMetadata().setActive(true);
+
+        User testerUser = new User("Tester", "McTesterson", "tester@revature.com", "tester", DEFAULT_PASSWORD, User.Role.TESTER);
+        testerUser.getMetadata().setActive(true);
+
+        User lockedUser = new User("Loch", "Yoozer", "loch@revature.com", "loch", DEFAULT_PASSWORD, User.Role.LOCKED);
+        lockedUser.getMetadata().setActive(true);
+
+        userRepo.saveAll(Arrays.asList(adminUser, managerUser, devUser, testerUser, lockedUser));
+
+        Task task1 = new Task()
+                .setTitle("[API] Login Endpoint")
+                .setDescription("The API needs to expose an endpoint at /auth that accepts POST requests containing user credentials in the request body")
+                .setPriority(Task.Priority.P2)
+                .setPointValue(12)
+                .setState(Task.State.BLOCKED)
+                .setLabels(Arrays.asList("api", "authentication", "security"))
+                .setCreator(managerUser)
+                .setAssignees(Arrays.asList(devUser, testerUser));
         task1.getMetadata().setActive(true);
 
-        Task task2 = new Task("Task 2 Title", "Task 2 Description", Task.Priority.P3, 3, Task.State.IN_PROGRESS, Arrays.asList("ui", "react"), user1, Collections.singletonList(user2));
+        Task task2 = new Task()
+                .setTitle("[API] Register Endpoint")
+                .setDescription("The API needs to expose an endpoint at /users that accepts POST requests containing new user information in the request body")
+                .setPriority(Task.Priority.P2)
+                .setPointValue(5)
+                .setState(Task.State.IN_PROGRESS)
+                .setLabels(Arrays.asList("api", "registration"))
+                .setCreator(managerUser)
+                .setAssignees(Arrays.asList(devUser, testerUser));
         task2.getMetadata().setActive(true);
 
-        Task task3 = new Task("Task 3 Title", "Task 3 Description", Task.Priority.P1, 12, Task.State.UNASSIGNED, Arrays.asList("important", "api", "security"), user2);
+        Task task3 = new Task()
+                .setTitle("[API] JWT Generation and Parsing")
+                .setDescription("We should research JWT libraries to use for token generation and parsing as a part of our authentication flows")
+                .setPriority(Task.Priority.P2)
+                .setPointValue(8)
+                .setState(Task.State.IN_PROGRESS)
+                .setLabels(Arrays.asList("api", "jwt", "security", "research"))
+                .setCreator(devUser)
+                .setAssignees(Arrays.asList(devUser, testerUser));
         task3.getMetadata().setActive(true);
 
-        Task task4 = new Task("Task 4 Title", "Task 4 Description", Task.Priority.P4, 8, Task.State.UNASSIGNED, Arrays.asList("api", "logging"), user2);
-        task3.getMetadata().setActive(true);
+        Task task4 = new Task()
+                .setTitle("[API] Logging Aspect")
+                .setDescription("The API needs log method invocations, returns, and exceptions to both a file and the console for debugging")
+                .setPriority(Task.Priority.P3)
+                .setPointValue(5)
+                .setState(Task.State.UNASSIGNED)
+                .setLabels(Arrays.asList("api", "aop", "logging"))
+                .setCreator(devUser);
+        task4.getMetadata().setActive(true);
 
         taskRepo.saveAll(Arrays.asList(task1, task2, task3, task4));
 
