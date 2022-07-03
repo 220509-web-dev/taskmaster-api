@@ -61,12 +61,6 @@ public class UserService {
         return !userRepo.existsByEmailAddress(request.getEmail());
     }
 
-    public UserResponsePayload fetchUserByEmail(@Valid EmailRequest request) {
-        return userRepo.findUserByEmailAddress(request.getEmail())
-                       .map(UserResponsePayload::new)
-                       .orElseThrow(ResourceNotFoundException::new);
-    }
-
     @Validated(OnCreate.class)
     public ResourceCreationResponse createUser(@Valid UserRequestPayload newUserRequest) {
 
