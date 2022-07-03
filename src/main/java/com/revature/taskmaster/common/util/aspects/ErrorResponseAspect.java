@@ -3,6 +3,7 @@ package com.revature.taskmaster.common.util.aspects;
 import com.revature.taskmaster.common.dtos.ErrorResponse;
 import com.revature.taskmaster.common.util.exceptions.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,6 +35,12 @@ public class ErrorResponseAspect {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException e) {
         return new ErrorResponse(404, Collections.singletonList(e.getMessage()));
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public ErrorResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e){
+        return new ErrorResponse(405, Collections.singletonList(e.getMessage()));
     }
 
     @ExceptionHandler
