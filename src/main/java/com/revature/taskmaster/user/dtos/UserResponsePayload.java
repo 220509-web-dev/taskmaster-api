@@ -3,10 +3,8 @@ package com.revature.taskmaster.user.dtos;
 import com.revature.taskmaster.common.dtos.ResourceMetadataPayload;
 import com.revature.taskmaster.user.User;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class UserResponsePayload {
 
     private String id;
