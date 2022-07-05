@@ -41,17 +41,33 @@ public class EntitySearcher {
             String searchVal = searchEntry.getValue();
 
             try {
+
                 if (searchKey.contains(".")) {
+
                     String[] searchKeyFrags = searchKey.split("\\.");
                     String nestedTypeName = searchKeyFrags[0];
                     String nestedTypeFieldName = searchKeyFrags[1];
-                    Join joinType = root.join(nestedTypeName);
-                    Field nestedTypeField = entityClass.getDeclaredField(nestedTypeName).getType().getDeclaredField(nestedTypeFieldName);
-                    predicate = getPredicate(cb, predicate, searchVal, nestedTypeField, joinType.get(nestedTypeFieldName));
+
+                    Field nestedTypeField;
+                    if (nestedTypeName.equals("metadata")) {
+                        nestedTypeField = entityClass.getSuperclass().getDeclaredField(nestedTypeName).getType().getDeclaredField(nestedTypeFieldName);
+                        predicate = getPredicate(cb, predicate, searchVal, nestedTypeField, root.get(nestedTypeName).get(nestedTypeFieldName));
+                    } else {
+                        Join joinType = root.join(nestedTypeName);
+                        nestedTypeField = entityClass.getDeclaredField(nestedTypeName).getType().getDeclaredField(nestedTypeFieldName);
+                        predicate = getPredicate(cb, predicate, searchVal, nestedTypeField, joinType.get(nestedTypeFieldName));
+                    }
+
                 } else {
-                    Field searchField = entityClass.getDeclaredField(searchKey);
+
+                    Field searchField = (searchKey.equals("id"))
+                            ? entityClass.getSuperclass().getDeclaredField(searchKey)
+                            : entityClass.getDeclaredField(searchKey);
+
                     predicate = getPredicate(cb, predicate, searchVal, searchField, root.get(searchKey));
+
                 }
+
             } catch (NoSuchFieldException e) {
                 throw new InvalidRequestException(String.format("No attribute with name: %s found on entity: %s", searchKey, entityClass.getSimpleName()));
             }
@@ -63,14 +79,16 @@ public class EntitySearcher {
         return new HashSet<>(entityManager.createQuery(query).getResultList());
     }
 
-    private Predicate getPredicate(CriteriaBuilder cb, Predicate predicate, String searchVal, Field nestedTypeField, Path path) {
-        if (nestedTypeField.getType().isEnum()) {
+    public Predicate getPredicate(CriteriaBuilder cb, Predicate predicate, String searchVal, Field searchField, Path path) {
+        if (searchField.getType().isEnum()) {
             try {
-                Enum enumVal = Enum.valueOf((Class<Enum>) nestedTypeField.getType(), searchVal.toUpperCase());
+                Enum enumVal = Enum.valueOf((Class<Enum>) searchField.getType(), searchVal.toUpperCase());
                 predicate = cb.and(predicate, cb.equal(path, enumVal));
             } catch (IllegalArgumentException e) {
                 throw new ResourceNotFoundException();
             }
+        } else if (searchField.getType().equals(Boolean.class) || searchField.getType() == boolean.class) {
+            predicate = cb.and(predicate, cb.equal(path, Boolean.parseBoolean(searchVal)));
         } else {
             predicate = cb.and(predicate, cb.equal(path, searchVal));
         }
