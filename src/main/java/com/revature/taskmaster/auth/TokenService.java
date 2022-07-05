@@ -21,7 +21,6 @@ public class TokenService {
         this.jwtConfig = jwtConfig;
     }
 
-    // TODO update JWT implementation
     public String generateToken(Principal subject) {
         long now = System.currentTimeMillis();
 
@@ -31,13 +30,12 @@ public class TokenService {
                                       .claim("role", subject.getAuthUserRole())
                                       .setIssuedAt(new Date(now))
                                       .setExpiration(new Date(now + jwtConfig.getExpiration()))
-                                      .signWith(jwtConfig.getSigAlg(), jwtConfig.getSigningKey());
+                                      .signWith(jwtConfig.getSigningKey(), jwtConfig.getSigAlg());
 
         return tokenBuilder.compact();
 
     }
 
-    // TODO update JWT implementation
     public Principal extractTokenDetails(String token) {
 
         if (token == null || token.isEmpty()) {
@@ -45,8 +43,9 @@ public class TokenService {
         }
 
         try {
-            Claims claims = Jwts.parser()
+            Claims claims = Jwts.parserBuilder()
                                 .setSigningKey(jwtConfig.getSigningKey())
+                                .build()
                                 .parseClaimsJws(token)
                                 .getBody();
 
