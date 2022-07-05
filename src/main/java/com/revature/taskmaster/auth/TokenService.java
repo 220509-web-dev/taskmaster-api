@@ -21,6 +21,7 @@ public class TokenService {
         this.jwtConfig = jwtConfig;
     }
 
+    // TODO update JWT implementation
     public String generateToken(Principal subject) {
         long now = System.currentTimeMillis();
 
@@ -36,6 +37,7 @@ public class TokenService {
 
     }
 
+    // TODO update JWT implementation
     public Principal extractTokenDetails(String token) {
 
         if (token == null || token.isEmpty()) {
