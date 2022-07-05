@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 @Component
 @Profile("local || test")
@@ -33,21 +32,30 @@ public class MockDataInserter implements CommandLineRunner {
         final String DEFAULT_PASSWORD = "Revature1!";
 
         User adminUser = new User("Adam", "Inn", "adam.inn@revature.com", "admin", DEFAULT_PASSWORD, User.Role.ADMIN);
+        adminUser.setId("admin-user-id");
         adminUser.getMetadata().setActive(true);
 
         User managerUser = new User("Manny", "Jerr", "manny@revature.com", "manny123", DEFAULT_PASSWORD, User.Role.MANAGER);
+        managerUser.setId("manager-user-id");
         managerUser.getMetadata().setActive(true);
 
         User devUser = new User("Devin", "Loper", "dev.loper@revature.com", "dev", DEFAULT_PASSWORD, User.Role.DEV);
+        devUser.setId("dev-user-id");
         devUser.getMetadata().setActive(true);
 
         User testerUser = new User("Tester", "McTesterson", "tester@revature.com", "tester", DEFAULT_PASSWORD, User.Role.TESTER);
+        testerUser.setId("tester-user-id");
         testerUser.getMetadata().setActive(true);
 
+        User inactiveUser = new User("Ann", "Odder", "ann.odder@revature.com", "ann123", DEFAULT_PASSWORD, User.Role.TESTER);
+        inactiveUser.setId("inactive-user-id");
+        inactiveUser.getMetadata().setActive(false);
+
         User lockedUser = new User("Loch", "Yoozer", "loch@revature.com", "loch", DEFAULT_PASSWORD, User.Role.LOCKED);
+        lockedUser.setId("locked-user-id");
         lockedUser.getMetadata().setActive(true);
 
-        userRepo.saveAll(Arrays.asList(adminUser, managerUser, devUser, testerUser, lockedUser));
+        userRepo.saveAll(Arrays.asList(adminUser, managerUser, devUser, testerUser, inactiveUser, lockedUser));
 
         Task task1 = new Task()
                 .setTitle("[API] Login Endpoint")
