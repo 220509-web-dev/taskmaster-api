@@ -2,8 +2,6 @@ package com.revature.taskmaster.auth;
 
 import com.revature.taskmaster.auth.dtos.AuthRequest;
 import com.revature.taskmaster.auth.dtos.Principal;
-import com.revature.taskmaster.user.UserService;
-import com.revature.taskmaster.user.dtos.UserResponsePayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
