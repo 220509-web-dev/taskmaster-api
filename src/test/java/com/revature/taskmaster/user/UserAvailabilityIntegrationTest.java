@@ -90,7 +90,7 @@ class UserAvailabilityIntegrationTest {
     }
 
     @Test
-    void test_checkUsernameAvailability_returns409_givenInvalidUsername() throws Exception {
+    void test_checkUsernameAvailability_returns400_givenInvalidUsername() throws Exception {
         String invalidUsername = "t";
         mockMvc.perform(get(PATH + "?username=" + invalidUsername))
                .andExpect(status().isBadRequest())
@@ -105,7 +105,7 @@ class UserAvailabilityIntegrationTest {
     }
 
     @Test
-    void test_checkEmailAvailability_returns409_givenInvalidEmail() throws Exception {
+    void test_checkEmailAvailability_returns400_givenInvalidEmail() throws Exception {
         String invalidEmail = "not an email";
         mockMvc.perform(get(PATH + "?email=" + invalidEmail))
                .andExpect(status().isBadRequest())
