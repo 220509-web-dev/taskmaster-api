@@ -30,28 +30,29 @@ public class TaskRequestPayload {
         min = 1,
         max = 50,
         groups = {
-                OnCreate.class,
-                OnUpdate.class
-        })
+            OnCreate.class,
+            OnUpdate.class})
     @NotNull(
         message = ValidatorMessageUtil.TASK_TITLE_REQUIRED_ON_CREATE,
         groups = OnCreate.class)
     private String title;
 
     @Length(
-            message = ValidatorMessageUtil.TASK_DESC_REQUIREMENTS,
-            min = 1,
-            groups = {
-                    OnCreate.class,
-                    OnUpdate.class
-            })
+        message = ValidatorMessageUtil.TASK_DESC_REQUIREMENTS,
+        min = 1,
+        groups = {
+            OnCreate.class,
+            OnUpdate.class})
     @NotNull(
-            message = ValidatorMessageUtil.TASK_DESC_REQUIRED_ON_CREATE,
-            groups = OnCreate.class)
+        message = ValidatorMessageUtil.TASK_DESC_REQUIRED_ON_CREATE,
+        groups = OnCreate.class)
     private String description;
 
-    @KnownPriorityLevel
-    @NotNull(groups = {OnCreate.class})
+    @NotNull(groups = OnCreate.class)
+    @KnownPriorityLevel(
+        groups = {
+            OnCreate.class,
+            OnUpdate.class})
     private int priority;
 
     @Min(
@@ -59,23 +60,20 @@ public class TaskRequestPayload {
         value = 1,
         groups = {
             OnCreate.class,
-            OnUpdate.class
-    })
+            OnUpdate.class})
     @Max(
         message = ValidatorMessageUtil.TASK_POINT_REQUIREMENTS,
         value = 100,
         groups = {
             OnCreate.class,
-            OnUpdate.class
-    })
+            OnUpdate.class})
     private int pointValue;
 
     @Future(
         message = ValidatorMessageUtil.TASK_DUE_DATE_REQUIREMENTS,
         groups = {
             OnCreate.class,
-            OnUpdate.class
-    })
+            OnUpdate.class})
     private LocalDate dueDate;
 
     @KnownTaskState
@@ -83,9 +81,15 @@ public class TaskRequestPayload {
 
     @NotNull(
         message = ValidatorMessageUtil.TASK_LABELS_REQUIRED_ON_CREATE,
-        groups = {OnCreate.class})
+        groups = OnCreate.class)
     private List<String> labels;
 
+    @Null(
+        message = ValidatorMessageUtil.PROVIDE_NO_EXPLICIT_TASK_CREATOR_ON_CREATE,
+        groups = OnCreate.class)
+    @Null(
+        message = ValidatorMessageUtil.CANNOT_UPDATE_TASK_CREATOR,
+        groups = OnUpdate.class)
     private String creatorId;
 
     private List<String> assigneeIds;
