@@ -1,10 +1,13 @@
 package com.revature.taskmaster.task.dtos;
 
+import com.revature.taskmaster.common.datasource.ResourceMetadata;
 import com.revature.taskmaster.common.util.web.validators.ValidatorMessageUtil;
 import com.revature.taskmaster.common.util.web.validators.annotations.KnownPriorityLevel;
 import com.revature.taskmaster.common.util.web.validators.annotations.KnownTaskState;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.common.util.web.validators.groups.OnUpdate;
+import com.revature.taskmaster.task.Task;
+import com.revature.taskmaster.user.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -12,6 +15,8 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -85,14 +90,10 @@ public class TaskRequestPayload {
     private List<String> labels;
 
     @Null(
-        message = ValidatorMessageUtil.PROVIDE_NO_EXPLICIT_TASK_CREATOR_ON_CREATE,
-        groups = OnCreate.class)
-    @Null(
         message = ValidatorMessageUtil.CANNOT_UPDATE_TASK_CREATOR,
         groups = OnUpdate.class)
     private String creatorId;
 
     private List<String> assigneeIds;
-
 
 }
