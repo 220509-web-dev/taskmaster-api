@@ -28,6 +28,8 @@ public class ValidatorMessageUtil {
     public static final String TASK_DESC_REQUIREMENTS = "Task descriptions must not be empty strings";
     public static final String TASK_POINT_REQUIREMENTS = "Task point values must be ";
     public static final String TASK_DUE_DATE_REQUIREMENTS = "Task due dates must be a date in the future";
+    public static final String PROVIDE_NO_EXPLICIT_TASK_CREATOR_ON_CREATE = "An explicitly declared task creator is not excepted during task creation (it is inferred from the request token)";
+    public static final String CANNOT_UPDATE_TASK_CREATOR = "The creator of a task cannot be updated.";
 
     private ValidatorMessageUtil() {
         super();
