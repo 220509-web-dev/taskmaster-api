@@ -29,7 +29,7 @@ class UserSearchIntegrationTest {
     @Test
     void test_userSearch_returnsOneUser_whenSearchingForKnownId() throws Exception {
         String knownId = "manager-user-id";
-        mockMvc.perform(get(PATH + "?id=" + knownId))
+        mockMvc.perform(get(PATH).param("id", knownId))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -43,7 +43,7 @@ class UserSearchIntegrationTest {
     @Test
     void test_userSearch_returnsOneUser_whenSearchingForKnownUsername() throws Exception {
         String knownUsername = "tester";
-        mockMvc.perform(get(PATH + "?username=" + knownUsername))
+        mockMvc.perform(get(PATH).param("username", knownUsername))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -56,8 +56,7 @@ class UserSearchIntegrationTest {
 
     @Test
     void test_userSearch_returnsOneUser_whenSearchingForKnownEmail() throws Exception {
-        String knownEmail = "tester@revature.com";
-        mockMvc.perform(get(PATH + "?emailAddress=" + knownEmail))
+        mockMvc.perform(get(PATH).param("emailAddress", "tester@revature.com"))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -70,7 +69,7 @@ class UserSearchIntegrationTest {
 
     @Test
     void test_userSearch_returnsSuccessfully_whenMultipleUsersAreFoundWithSearchParams() throws Exception {
-        mockMvc.perform(get(PATH + "?role=TESTER"))
+        mockMvc.perform(get(PATH).param("role", "TESTER"))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -96,8 +95,7 @@ class UserSearchIntegrationTest {
 
     @Test
     void test_userSearch_returnsSuccessfully_whenUsingSearchingUsingOfNestedField() throws Exception {
-        String nestedFieldQuery = "?metadata.active=false";
-        mockMvc.perform(get(PATH + nestedFieldQuery))
+        mockMvc.perform(get(PATH).param("metadata.active", "false"))
                 .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -109,8 +107,7 @@ class UserSearchIntegrationTest {
 
     @Test
     void test_userSearch_returns404_whenNoUsersAreFoundWithSearchParams() throws Exception {
-        String unknownId = "unknown-user-id";
-        mockMvc.perform(get(PATH + "?id=" + unknownId))
+        mockMvc.perform(get(PATH).param("id", "unknown-user-id"))
                .andExpect(status().isNotFound())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -124,8 +121,7 @@ class UserSearchIntegrationTest {
 
     @Test
     void test_userSearch_returns400_whenSearchParamsContainUnknownKey() throws Exception {
-        String unknownKeyPair = "?unknown=invalid";
-        mockMvc.perform(get(PATH + unknownKeyPair))
+        mockMvc.perform(get(PATH).param("unknown", "invalid"))
                .andExpect(status().isBadRequest())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
