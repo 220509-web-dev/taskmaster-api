@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface KnownTaskState {
-    String message() default "The provided task state is unknown.";
+    String message() default "The provided task state is unknown";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }

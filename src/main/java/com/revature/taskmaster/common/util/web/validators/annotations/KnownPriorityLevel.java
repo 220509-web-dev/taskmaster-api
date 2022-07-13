@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface KnownPriorityLevel {
-    String message() default "The provided priority level is unknown or invalid.";
+    String message() default "The provided priority level is unknown or invalid";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }
