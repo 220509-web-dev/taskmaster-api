@@ -1,25 +1,20 @@
 package com.revature.taskmaster.task.dtos;
 
-import com.revature.taskmaster.common.datasource.ResourceMetadata;
 import com.revature.taskmaster.common.util.web.validators.ValidatorMessageUtil;
 import com.revature.taskmaster.common.util.web.validators.annotations.KnownPriorityLevel;
 import com.revature.taskmaster.common.util.web.validators.annotations.KnownTaskState;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.common.util.web.validators.groups.OnUpdate;
 import com.revature.taskmaster.task.Task;
-import com.revature.taskmaster.user.User;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Data
-@NoArgsConstructor
 public class TaskRequestPayload {
 
     @Null(
@@ -81,7 +76,7 @@ public class TaskRequestPayload {
             OnUpdate.class})
     private LocalDate dueDate;
 
-    @KnownTaskState
+    @KnownTaskState(groups = {OnCreate.class, OnUpdate.class})
     private String state;
 
     @NotNull(
@@ -98,5 +93,14 @@ public class TaskRequestPayload {
     private String creatorId;
 
     private List<String> assigneeIds;
+
+    public TaskRequestPayload() {
+        this.assigneeIds = new ArrayList<>();
+    }
+
+    // TODO implement resource extraction (map this object to a Task)
+    public Task extractResource() {
+        return null;
+    }
 
 }
