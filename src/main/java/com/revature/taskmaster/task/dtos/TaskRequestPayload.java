@@ -89,6 +89,9 @@ public class TaskRequestPayload {
         groups = OnCreate.class)
     private List<String> labels;
 
+    @NotNull(
+        message = ValidatorMessageUtil.CREATOR_ID_REQUIREMENTS_ON_CREATE,
+        groups = OnCreate.class)
     @Null(
         message = ValidatorMessageUtil.CANNOT_UPDATE_TASK_CREATOR,
         groups = OnUpdate.class)
