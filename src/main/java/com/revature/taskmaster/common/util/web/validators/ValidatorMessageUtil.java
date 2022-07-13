@@ -30,6 +30,7 @@ public class ValidatorMessageUtil {
     public static final String TASK_DUE_DATE_REQUIREMENTS = "Task due dates must be a date in the future";
     public static final String PROVIDE_NO_EXPLICIT_TASK_CREATOR_ON_CREATE = "An explicitly declared task creator is not excepted during task creation (it is inferred from the request token)";
     public static final String CANNOT_UPDATE_TASK_CREATOR = "The creator of a task cannot be updated.";
+    public static final String CREATOR_ID_REQUIREMENTS_ON_CREATE = "Task creation requests are expected to provide a creator id.";
 
     private ValidatorMessageUtil() {
         super();
