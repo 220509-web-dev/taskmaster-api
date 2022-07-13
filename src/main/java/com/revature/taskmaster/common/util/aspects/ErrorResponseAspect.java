@@ -32,6 +32,18 @@ public class ErrorResponseAspect {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleAuthenticationException(AuthenticationException e) {
+        return new ErrorResponse(401, Collections.singletonList(e.getMessage()));
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleAuthorizationException(AuthorizationException e) {
+        return new ErrorResponse(403, Collections.singletonList(e.getMessage()));
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException e) {
         return new ErrorResponse(404, Collections.singletonList(e.getMessage()));
@@ -50,15 +62,9 @@ public class ErrorResponseAspect {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse handleAuthenticationException(AuthenticationException e) {
-        return new ErrorResponse(401, Collections.singletonList(e.getMessage()));
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleAuthorizationException(AuthorizationException e) {
-        return new ErrorResponse(403, Collections.singletonList(e.getMessage()));
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse handleUnprocessableEntityException(UnprocessableEntityException e) {
+        return new ErrorResponse(422, Collections.singletonList(e.getMessage()));
     }
 
     @ExceptionHandler
