@@ -48,6 +48,11 @@ public class User extends Resource implements Comparable<User> {
         this.metadata = new ResourceMetadata();
     }
 
+    public User(String id) {
+        this();
+        this.id = id;
+    }
+
     public User(String firstName, String lastName, String emailAddress, String username, String password) {
         this();
         this.firstName = firstName;
@@ -164,7 +169,7 @@ public class User extends Resource implements Comparable<User> {
     }
 
     public enum Role {
-        ADMIN, MANAGER, DEV, TESTER, LOCKED;
+        ADMIN, MANAGER, DEV, TESTER, LOCKED
     }
 
 }
