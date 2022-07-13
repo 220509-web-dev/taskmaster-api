@@ -1,27 +1,34 @@
 package com.revature.taskmaster.task;
 
 import com.revature.taskmaster.common.datasource.EntitySearcher;
+import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
 import com.revature.taskmaster.common.util.exceptions.ResourceNotFoundException;
+import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
+import com.revature.taskmaster.task.dtos.TaskRequestPayload;
 import com.revature.taskmaster.task.dtos.TaskResponsePayload;
+import com.revature.taskmaster.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import javax.validation.Valid;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Validated
 public class TaskService {
 
     private final TaskRepository taskRepo;
+    private final UserService userService;
     private final EntitySearcher entitySearcher;
 
     @Autowired
-    public TaskService(TaskRepository taskRepo, EntitySearcher entitySearcher) {
+    public TaskService(TaskRepository taskRepo, UserService userService, EntitySearcher entitySearcher) {
         this.taskRepo = taskRepo;
+        this.userService = userService;
         this.entitySearcher = entitySearcher;
     }
 
@@ -39,6 +46,11 @@ public class TaskService {
         return tasks.stream()
                     .map(TaskResponsePayload::new)
                     .collect(Collectors.toList());
+    }
+
+    @Validated(OnCreate.class)
+    public ResourceCreationResponse createTask(@Valid TaskRequestPayload newTaskRequest)  {
+        return null; // TODO implement service logic for task creation (validation + mapping)
     }
 
 }
