@@ -99,7 +99,7 @@ public class TaskRequestPayload {
     }
 
     // TODO implement resource extraction (map this object to a Task)
-    public Task extractResource() {
+    public Task extractResource() { this.
         return null;
     }
 

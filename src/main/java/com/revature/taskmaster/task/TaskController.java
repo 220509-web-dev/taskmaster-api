@@ -5,6 +5,7 @@ import com.revature.taskmaster.task.dtos.TaskResponsePayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -30,9 +31,10 @@ public class TaskController {
     }
 
     @PostMapping(value = "/newTask", consumes = "application/json", produces =  "application/json") // reachable at /newTask
-    public Task createNewTask(@RequestBody TaskRequestPayload newTaskInfo) {
+    public Task createNewTask(@RequestBody @Valid TaskRequestPayload newTaskInfo) {
 
-
+        newTaskInfo.extractResource(); // displays information about the new Task
+        return new Task(); //implements the new Task
     }
 
 }

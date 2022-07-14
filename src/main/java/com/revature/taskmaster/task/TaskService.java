@@ -5,6 +5,7 @@ import com.revature.taskmaster.common.util.exceptions.ResourceNotFoundException;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.task.dtos.TaskRequestPayload;
 import com.revature.taskmaster.task.dtos.TaskResponsePayload;
+import com.revature.taskmaster.user.User;
 import com.revature.taskmaster.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import java.awt.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
@@ -51,7 +51,7 @@ public class TaskService {
     }
 
     @Validated(OnCreate.class)
-    public Task createTask(@Valid TaskRequestPayload newTaskRequest)  {
+    public @Valid TaskRequestPayload createTask(@Valid TaskRequestPayload newTaskRequest)  {
         // created task 1
         Task newTask = newTaskRequest.extractResource();
         newTask.setTitle("task-1");
@@ -60,9 +60,10 @@ public class TaskService {
         newTask.setPointValue(15);
         newTask.setDueDate(LocalDate.MAX);
         newTask.setState(Task.State.READY_TO_START);
-        newTask.setLabels("ready-to-start", "test");
-        newTask.setCreator();
-        return newTask;
+        newTask.setLabels(toString("ready-to-start", "test"));
+        newTask.setCreator(User "manager-user-id");
+
+        return createTask();
     }
 
 }
