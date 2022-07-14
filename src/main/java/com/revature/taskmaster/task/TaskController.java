@@ -4,6 +4,7 @@ import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
 import com.revature.taskmaster.task.dtos.TaskRequestPayload;
 import com.revature.taskmaster.task.dtos.TaskResponsePayload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,9 +31,10 @@ public class TaskController {
         return taskService.search(requestParams);
     }
 
-    public ResourceCreationResponse createNewTask(TaskRequestPayload newTaskInfo) {
-        // TODO implement new task creation/persistence handler
-        return null;
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(produces = "application/json", consumes = "application/json")
+    public ResourceCreationResponse createNewTask(@RequestBody TaskRequestPayload newTaskInfo) {
+        return taskService.createTask(newTaskInfo);
     }
 
 }

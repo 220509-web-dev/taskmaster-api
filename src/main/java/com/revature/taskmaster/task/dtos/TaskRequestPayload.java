@@ -1,11 +1,13 @@
 package com.revature.taskmaster.task.dtos;
 
+import com.revature.taskmaster.common.datasource.ResourceMetadata;
 import com.revature.taskmaster.common.util.web.validators.ValidatorMessageUtil;
 import com.revature.taskmaster.common.util.web.validators.annotations.KnownPriorityLevel;
 import com.revature.taskmaster.common.util.web.validators.annotations.KnownTaskState;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.common.util.web.validators.groups.OnUpdate;
 import com.revature.taskmaster.task.Task;
+import com.revature.taskmaster.user.User;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -13,6 +15,7 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class TaskRequestPayload {
@@ -98,9 +101,24 @@ public class TaskRequestPayload {
         this.assigneeIds = new ArrayList<>();
     }
 
-    // TODO implement resource extraction (map this object to a Task)
     public Task extractResource() {
-        return null;
+
+        Task task = new Task()
+                            .setTitle(title)
+                            .setDescription(description)
+                            .setPriority(Task.Priority.fromValue(priority))
+                            .setPointValue(pointValue)
+                            .setDueDate(dueDate)
+                            .setState(Task.State.fromValue(state))
+                            .setLabels(labels)
+                            .setCreator(new User(creatorId))
+                            .setAssignees(assigneeIds.stream().map(User::new).collect(Collectors.toList()));
+
+        task.setId(id);
+        task.setMetadata(new ResourceMetadata());
+
+        return task;
+
     }
 
 }
