@@ -30,6 +30,7 @@ public class TaskController {
         return taskService.search(requestParams);
     }
 
+    @PostMapping
     public ResourceCreationResponse createNewTask(TaskRequestPayload newTaskInfo) {
         // TODO implement new task creation/persistence handler
         return null;
