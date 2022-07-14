@@ -1,7 +1,6 @@
 package com.revature.taskmaster.task;
 
 import com.revature.taskmaster.common.datasource.EntitySearcher;
-import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
 import com.revature.taskmaster.common.util.exceptions.ResourceNotFoundException;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.task.dtos.TaskRequestPayload;
@@ -49,8 +48,10 @@ public class TaskService {
     }
 
     @Validated(OnCreate.class)
-    public ResourceCreationResponse createTask(@Valid TaskRequestPayload newTaskRequest)  {
-        return null; // TODO implement service logic for task creation (validation + mapping)
+    public Task createTask(@Valid TaskRequestPayload newTaskRequest)  {
+        // creates task within specified parameters
+        Task newTask = newTaskRequest.extractResource(title, description, priority, pointValue, dueDate, state, labels, creatorId);
+        return newTask;
     }
 
 }

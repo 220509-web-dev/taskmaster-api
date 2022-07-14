@@ -1,6 +1,5 @@
 package com.revature.taskmaster.task;
 
-import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
 import com.revature.taskmaster.task.dtos.TaskRequestPayload;
 import com.revature.taskmaster.task.dtos.TaskResponsePayload;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,10 @@ public class TaskController {
         return taskService.search(requestParams);
     }
 
-    public ResourceCreationResponse createNewTask(TaskRequestPayload newTaskInfo) {
-        // TODO implement new task creation/persistence handler
-        return null;
+    @PostMapping(value = "/newTask", consumes = "application/json", produces =  "application/json") // reachable at /newTask
+    public Task createNewTask(TaskRequestPayload newTaskInfo) {
+
+        return createNewTask();
     }
 
 }
