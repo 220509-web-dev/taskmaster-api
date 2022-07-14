@@ -12,7 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.awt.*;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,8 +52,16 @@ public class TaskService {
 
     @Validated(OnCreate.class)
     public Task createTask(@Valid TaskRequestPayload newTaskRequest)  {
-        // creates task within specified parameters
-        Task newTask = newTaskRequest.extractResource(title, description, priority, pointValue, dueDate, state, labels, creatorId);
+        // created task 1
+        Task newTask = newTaskRequest.extractResource();
+        newTask.setTitle("task-1");
+        newTask.setDescription("Use what you've learned in Bash to construct a calculator [open documentation]");
+        newTask.setPriority(Task.Priority.P2);
+        newTask.setPointValue(15);
+        newTask.setDueDate(LocalDate.MAX);
+        newTask.setState(Task.State.READY_TO_START);
+        newTask.setLabels("ready-to-start", "test");
+        newTask.setCreator();
         return newTask;
     }
 

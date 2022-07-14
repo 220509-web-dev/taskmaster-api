@@ -30,9 +30,9 @@ public class TaskController {
     }
 
     @PostMapping(value = "/newTask", consumes = "application/json", produces =  "application/json") // reachable at /newTask
-    public Task createNewTask(TaskRequestPayload newTaskInfo) {
+    public Task createNewTask(@RequestBody TaskRequestPayload newTaskInfo) {
 
-        return createNewTask();
+
     }
 
 }
