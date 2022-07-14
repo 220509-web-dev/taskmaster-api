@@ -22,7 +22,7 @@ public abstract class Resource {
         return id;
     }
 
-    public void setId(String id) {
+    public static void setId(String id) {
         this.id = id;
     }
 

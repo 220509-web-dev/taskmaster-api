@@ -8,6 +8,7 @@ import com.revature.taskmaster.common.util.web.validators.groups.OnUpdate;
 import com.revature.taskmaster.task.Task;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -48,6 +49,7 @@ public class TaskRequestPayload {
         groups = OnCreate.class)
     private String description;
 
+    @Range(min = 1, max = 4)
     @NotNull(groups = OnCreate.class)
     @KnownPriorityLevel(
         groups = {
@@ -75,6 +77,7 @@ public class TaskRequestPayload {
             OnCreate.class,
             OnUpdate.class})
     private LocalDate dueDate;
+
 
     @KnownTaskState(groups = {OnCreate.class, OnUpdate.class})
     private String state;
