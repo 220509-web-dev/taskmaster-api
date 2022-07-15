@@ -44,6 +44,10 @@ public class UserService {
                        .collect(Collectors.toList());
     }
 
+    public boolean isKnownUserId(String userId) {
+        return userRepo.existsById(userId);
+    }
+
     public List<UserResponsePayload> search(Map<String, String> requestParamMap) {
         if (requestParamMap.isEmpty()) return fetchAllUsers();
         Set<User> matchingUsers = entitySearcher.searchForEntity(requestParamMap, User.class);

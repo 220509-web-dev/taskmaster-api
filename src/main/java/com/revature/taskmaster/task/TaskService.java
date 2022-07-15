@@ -3,6 +3,7 @@ package com.revature.taskmaster.task;
 import com.revature.taskmaster.common.datasource.EntitySearcher;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
 import com.revature.taskmaster.common.util.exceptions.ResourceNotFoundException;
+import com.revature.taskmaster.common.util.exceptions.UnprocessableEntityException;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.task.dtos.TaskRequestPayload;
 import com.revature.taskmaster.task.dtos.TaskResponsePayload;
@@ -50,7 +51,23 @@ public class TaskService {
 
     @Validated(OnCreate.class)
     public ResourceCreationResponse createTask(@Valid TaskRequestPayload newTaskRequest)  {
-        return null; // TODO implement service logic for task creation (validation + mapping)
+
+        if (!userService.isKnownUserId(newTaskRequest.getCreatorId())) {
+            throw new UnprocessableEntityException("Could not persist task, no user found with the provided creatorId!");
+        }
+
+        newTaskRequest.getAssigneeIds().forEach(assigneeId -> {
+            if (!userService.isKnownUserId(assigneeId)) {
+                throw new UnprocessableEntityException("Could not persist task, no user found with the provided assigneeId!");
+            }
+        });
+
+        Task newTask = newTaskRequest.extractResource();
+        newTask.setId(UUID.randomUUID().toString());
+        taskRepo.save(newTask);
+
+        return new ResourceCreationResponse(newTask.getId());
+
     }
 
 }
