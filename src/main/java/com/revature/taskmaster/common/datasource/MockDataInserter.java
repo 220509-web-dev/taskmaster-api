@@ -1,4 +1,4 @@
-package com.revature.taskmaster.config;
+package com.revature.taskmaster.common.datasource;
 
 import com.revature.taskmaster.task.Task;
 import com.revature.taskmaster.task.TaskRepository;
