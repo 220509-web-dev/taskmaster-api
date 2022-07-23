@@ -13,8 +13,10 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Data
@@ -112,13 +114,20 @@ public class TaskRequestPayload {
                             .setPriority(Task.Priority.fromValue(priority))
                             .setPointValue(pointValue)
                             .setDueDate(dueDate)
-                            .setState(Task.State.fromValue(state))
                             .setLabels(labels)
                             .setCreator(new User(creatorId))
                             .setAssignees(assigneeIds.stream().map(User::new).collect(Collectors.toList()));
 
-        task.setId(id);
-        task.setMetadata(new ResourceMetadata());
+        if (id == null) {
+            task.setId(UUID.randomUUID().toString());
+            task.setState(Task.State.UNASSIGNED);
+            task.setMetadata(new ResourceMetadata());
+            task.getMetadata().setActive(true);
+        } else {
+            task.setId(id);
+            task.setState(Task.State.fromValue(state));
+            task.getMetadata().setUpdatedDatetime(LocalDateTime.now());
+        }
 
         return task;
 
