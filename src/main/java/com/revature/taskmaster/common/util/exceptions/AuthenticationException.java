@@ -3,7 +3,7 @@ package com.revature.taskmaster.common.util.exceptions;
 public class AuthenticationException extends RuntimeException {
 
     public AuthenticationException() {
-        super("No user record found using the provided credentials!");
+        super("No active user record found using the provided credentials!");
     }
 
     public AuthenticationException(String message) {
