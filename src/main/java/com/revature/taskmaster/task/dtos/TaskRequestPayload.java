@@ -79,7 +79,10 @@ public class TaskRequestPayload {
             OnUpdate.class})
     private LocalDate dueDate;
 
-    @KnownTaskState(groups = {OnCreate.class, OnUpdate.class})
+    @Null(
+        message = ValidatorMessageUtil.PROVIDE_NO_EXPLICIT_TASK_STATE_ON_CREATE,
+        groups = {OnCreate.class})
+    @KnownTaskState(groups = {OnUpdate.class})
     private String state;
 
     @NotNull(
@@ -87,11 +90,11 @@ public class TaskRequestPayload {
         groups = OnCreate.class)
     private List<String> labels;
 
-    @NotNull(
-        message = ValidatorMessageUtil.CREATOR_ID_REQUIREMENTS_ON_CREATE,
+    @Null(
+        message = ValidatorMessageUtil.PROVIDE_NO_EXPLICIT_TASK_CREATOR_ON_CREATE,
         groups = OnCreate.class)
     @Null(
-        message = ValidatorMessageUtil.CANNOT_UPDATE_TASK_CREATOR,
+        message = ValidatorMessageUtil.PROVIDE_NO_TASK_CREATOR_ON_UPDATE,
         groups = OnUpdate.class)
     private String creatorId;
 

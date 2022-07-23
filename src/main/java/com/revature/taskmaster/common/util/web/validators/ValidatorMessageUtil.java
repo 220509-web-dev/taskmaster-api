@@ -28,9 +28,9 @@ public class ValidatorMessageUtil {
     public static final String TASK_DESC_REQUIREMENTS = "Task descriptions must not be empty strings";
     public static final String TASK_POINT_REQUIREMENTS = "Task point values must be in the inclusive range: 1 - 100";
     public static final String TASK_DUE_DATE_REQUIREMENTS = "Task due dates must be a date in the future";
-    public static final String PROVIDE_NO_EXPLICIT_TASK_CREATOR_ON_CREATE = "An explicitly declared task creator is not excepted during task creation (it is inferred from the request token)";
-    public static final String CANNOT_UPDATE_TASK_CREATOR = "The creator of a task cannot be updated";
-    public static final String CREATOR_ID_REQUIREMENTS_ON_CREATE = "Task creation requests are expected to provide a creator id";
+    public static final String PROVIDE_NO_EXPLICIT_TASK_STATE_ON_CREATE = "No task state is expected in the request payload for task creation - defaults to UNASSIGNED.";
+    public static final String PROVIDE_NO_EXPLICIT_TASK_CREATOR_ON_CREATE = "An explicitly declared task creator is not excepted during task creation, as it is inferred from the request token";
+    public static final String PROVIDE_NO_TASK_CREATOR_ON_UPDATE = "The creator of a task cannot be updated";
 
     private ValidatorMessageUtil() {
         super();
