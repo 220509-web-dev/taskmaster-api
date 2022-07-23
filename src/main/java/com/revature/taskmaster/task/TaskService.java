@@ -4,6 +4,7 @@ import com.revature.taskmaster.common.datasource.EntitySearcher;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
 import com.revature.taskmaster.common.util.exceptions.ResourceNotFoundException;
 import com.revature.taskmaster.common.util.exceptions.UnprocessableEntityException;
+import com.revature.taskmaster.common.util.web.security.SecurityContext;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.task.dtos.TaskRequestPayload;
 import com.revature.taskmaster.task.dtos.TaskResponsePayload;
@@ -26,11 +27,18 @@ public class TaskService {
     private final UserService userService;
     private final EntitySearcher entitySearcher;
 
+    private SecurityContext securityContext;
+
     @Autowired
     public TaskService(TaskRepository taskRepo, UserService userService, EntitySearcher entitySearcher) {
         this.taskRepo = taskRepo;
         this.userService = userService;
         this.entitySearcher = entitySearcher;
+    }
+
+    @Autowired
+    public void setSecurityContext(SecurityContext securityContext) {
+        this.securityContext = securityContext;
     }
 
     public List<TaskResponsePayload> fetchAllTasks() {
@@ -52,6 +60,8 @@ public class TaskService {
     @Validated(OnCreate.class)
     public ResourceCreationResponse createTask(@Valid TaskRequestPayload newTaskRequest)  {
 
+        newTaskRequest.setCreatorId(securityContext.getRequester().getAuthUserId());
+
         if (!userService.isKnownUserId(newTaskRequest.getCreatorId())) {
             throw new UnprocessableEntityException("Could not persist task, no user found with the provided creatorId!");
         }
@@ -63,9 +73,7 @@ public class TaskService {
         });
 
         Task newTask = newTaskRequest.extractResource();
-        newTask.setId(UUID.randomUUID().toString());
         taskRepo.save(newTask);
-
         return new ResourceCreationResponse(newTask.getId());
 
     }

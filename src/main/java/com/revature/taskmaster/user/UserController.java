@@ -1,7 +1,6 @@
 package com.revature.taskmaster.user;
 
 import com.revature.taskmaster.common.util.exceptions.InvalidRequestException;
-import com.revature.taskmaster.common.util.web.security.Secured;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
 import com.revature.taskmaster.user.dtos.EmailRequest;
 import com.revature.taskmaster.user.dtos.UserRequestPayload;
@@ -26,7 +25,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Secured(allowedRoles = {"ADMIN"})
     @GetMapping(produces = "application/json")
     public List<UserResponsePayload> findBy(@RequestParam Map<String, String> params) {
         return userService.search(params);
@@ -66,7 +64,6 @@ public class UserController {
     }
 
     @DeleteMapping
-    @Secured(allowedRoles = {"ADMIN"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateUser(@RequestParam String id) {
         userService.deactivateUser(id);

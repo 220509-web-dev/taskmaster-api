@@ -1,6 +1,7 @@
 package com.revature.taskmaster.task;
 
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
+import com.revature.taskmaster.common.util.web.security.AuthenticationRequired;
 import com.revature.taskmaster.task.dtos.TaskRequestPayload;
 import com.revature.taskmaster.task.dtos.TaskResponsePayload;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class TaskController {
         return taskService.search(requestParams);
     }
 
+    @AuthenticationRequired
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = "application/json", consumes = "application/json")
     public ResourceCreationResponse createNewTask(@RequestBody TaskRequestPayload newTaskInfo) {

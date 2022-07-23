@@ -1,6 +1,8 @@
 package com.revature.taskmaster.task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.taskmaster.auth.TokenService;
+import com.revature.taskmaster.auth.dtos.Principal;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
 import com.revature.taskmaster.task.dtos.TaskRequestPayload;
 import org.junit.jupiter.api.Test;
@@ -28,14 +30,17 @@ class TaskCreationIntegrationTest {
 
     private final MockMvc mockMvc;
     private final ObjectMapper jsonMapper;
+
+    private final TokenService tokenService;
     private final TaskRepository taskRepo;
     private final String PATH = "/tasks";
     private final String CONTENT_TYPE = "application/json";
 
     @Autowired
-    public TaskCreationIntegrationTest(MockMvc mockMvc, ObjectMapper jsonMapper, TaskRepository taskRepo) {
+    public TaskCreationIntegrationTest(MockMvc mockMvc, ObjectMapper jsonMapper, TokenService tokenService, TaskRepository taskRepo) {
         this.mockMvc = mockMvc;
         this.jsonMapper = jsonMapper;
+        this.tokenService = tokenService;
         this.taskRepo = taskRepo;
     }
 
@@ -48,13 +53,16 @@ class TaskCreationIntegrationTest {
         newTaskRequest.setPriority(4);
         newTaskRequest.setPointValue(5);
         newTaskRequest.setDueDate(LocalDate.now().plusDays(14));
-        newTaskRequest.setState("UNASSIGNED");
         newTaskRequest.setLabels(Arrays.asList("ready to start", "valid", "test"));
-        newTaskRequest.setCreatorId("dev-user-id");
 
+        String token = tokenService.generateToken(new Principal("dev-user-id", "dev", "DEV"));
         String requestPayload = jsonMapper.writeValueAsString(newTaskRequest);
 
-        MvcResult result = mockMvc.perform(post(PATH).contentType(CONTENT_TYPE).content(requestPayload))
+        MvcResult result = mockMvc.perform(
+                                    post(PATH)
+                                        .header("Authorization", token)
+                                        .contentType(CONTENT_TYPE)
+                                        .content(requestPayload))
                                   .andExpect(status().isCreated())
                                   .andExpect(header().string("content-type", CONTENT_TYPE))
                                   .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -79,14 +87,17 @@ class TaskCreationIntegrationTest {
         newTaskRequest.setPriority(4);
         newTaskRequest.setPointValue(5);
         newTaskRequest.setDueDate(LocalDate.now().plusDays(14));
-        newTaskRequest.setState("UNASSIGNED");
         newTaskRequest.setLabels(Arrays.asList("ready to start", "valid", "test"));
-        newTaskRequest.setCreatorId("manager-user-id");
         newTaskRequest.setAssigneeIds(Arrays.asList("dev-user-id", "tester-user-id"));
 
+        String token = tokenService.generateToken(new Principal("dev-user-id", "dev", "DEV"));
         String requestPayload = jsonMapper.writeValueAsString(newTaskRequest);
 
-        MvcResult result = mockMvc.perform(post(PATH).contentType(CONTENT_TYPE).content(requestPayload))
+        MvcResult result = mockMvc.perform(
+                                    post(PATH)
+                                        .header("Authorization", token)
+                                        .contentType(CONTENT_TYPE)
+                                        .content(requestPayload))
                                   .andExpect(status().isCreated())
                                   .andExpect(header().string("content-type", CONTENT_TYPE))
                                   .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -111,14 +122,17 @@ class TaskCreationIntegrationTest {
         newTaskRequest.setPriority(4);
         newTaskRequest.setPointValue(5);
         newTaskRequest.setDueDate(LocalDate.now().plusDays(14));
-        newTaskRequest.setState("UNASSIGNED");
         newTaskRequest.setLabels(Arrays.asList("ready to start", "valid", "test"));
-        newTaskRequest.setCreatorId("unknown-user-id");
         newTaskRequest.setAssigneeIds(Arrays.asList("dev-user-id", "tester-user-id"));
 
+        String token = tokenService.generateToken(new Principal("fake-admin-user-id", "fake-admin", "ADMIN"));
         String requestPayload = jsonMapper.writeValueAsString(newTaskRequest);
 
-        mockMvc.perform(post(PATH).contentType(CONTENT_TYPE).content(requestPayload))
+        mockMvc.perform(
+                    post(PATH)
+                        .header("Authorization", token)
+                        .contentType(CONTENT_TYPE)
+                        .content(requestPayload))
                .andExpect(status().isUnprocessableEntity())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -138,14 +152,17 @@ class TaskCreationIntegrationTest {
         newTaskRequest.setPriority(4);
         newTaskRequest.setPointValue(5);
         newTaskRequest.setDueDate(LocalDate.now().plusDays(14));
-        newTaskRequest.setState("UNASSIGNED");
         newTaskRequest.setLabels(Arrays.asList("ready to start", "valid", "test"));
-        newTaskRequest.setCreatorId("manager-user-id");
         newTaskRequest.setAssigneeIds(Arrays.asList("dev-user-id", "unknown-user-id"));
 
+        String token = tokenService.generateToken(new Principal("dev-user-id", "dev", "DEV"));
         String requestPayload = jsonMapper.writeValueAsString(newTaskRequest);
 
-        mockMvc.perform(post(PATH).contentType(CONTENT_TYPE).content(requestPayload))
+        mockMvc.perform(
+                   post(PATH)
+                       .header("Authorization", token)
+                       .contentType(CONTENT_TYPE)
+                       .content(requestPayload))
                .andExpect(status().isUnprocessableEntity())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -165,26 +182,30 @@ class TaskCreationIntegrationTest {
         newTaskRequest.setPriority(5);
         newTaskRequest.setPointValue(101);
         newTaskRequest.setDueDate(LocalDate.now().minusDays(14));
-        newTaskRequest.setState("INVALID");
+        newTaskRequest.setState("DONE");
 
+        String token = tokenService.generateToken(new Principal("dev-user-id", "dev", "DEV"));
         String requestPayload = jsonMapper.writeValueAsString(newTaskRequest);
 
-        mockMvc.perform(post(PATH).contentType(CONTENT_TYPE).content(requestPayload))
+        mockMvc.perform(
+                   post(PATH)
+                       .header("Authorization", token)
+                       .contentType(CONTENT_TYPE)
+                       .content(requestPayload))
                .andExpect(status().isBadRequest())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
                .andExpect(header().string("Access-Control-Allow-Methods", "*"))
                .andExpect(header().string("Access-Control-Allow-Headers", "*"))
                .andExpect(jsonPath("$.messages").isArray())
-               .andExpect(jsonPath("$.messages", hasSize(9)))
+               .andExpect(jsonPath("$.messages", hasSize(8)))
                .andExpect(jsonPath("$.messages", hasItem("No id is expected in the payload for creation requests")))
                .andExpect(jsonPath("$.messages", hasItem("Task titles must not be empty and no more than 50 characters long")))
                .andExpect(jsonPath("$.messages", hasItem("A description value is expected in the request payload for task creation")))
                .andExpect(jsonPath("$.messages", hasItem("The provided priority level is unknown or invalid")))
                .andExpect(jsonPath("$.messages", hasItem("Task point values must be in the inclusive range: 1 - 100")))
                .andExpect(jsonPath("$.messages", hasItem("Task due dates must be a date in the future")))
-               .andExpect(jsonPath("$.messages", hasItem("The provided task state is unknown")))
-               .andExpect(jsonPath("$.messages", hasItem("Task creation requests are expected to provide a creator id")))
+               .andExpect(jsonPath("$.messages", hasItem("No task state is expected in the request payload for task creation - defaults to UNASSIGNED")))
                .andExpect(jsonPath("$.messages", hasItem("At least one label string is expected in the request payload for task creation")))
                .andReturn();
 

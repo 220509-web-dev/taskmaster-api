@@ -24,15 +24,15 @@ public class TokenService {
     public String generateToken(Principal subject) {
         long now = System.currentTimeMillis();
 
-        JwtBuilder tokenBuilder = Jwts.builder()
-                                      .setId(subject.getAuthUserId())
-                                      .setIssuer("taskmaster")
-                                      .claim("role", subject.getAuthUserRole())
-                                      .setIssuedAt(new Date(now))
-                                      .setExpiration(new Date(now + jwtConfig.getExpiration()))
-                                      .signWith(jwtConfig.getSigningKey(), jwtConfig.getSigAlg());
-
-        return tokenBuilder.compact();
+        return Jwts.builder()
+                   .setId(subject.getAuthUserId())
+                   .setIssuer("taskmaster")
+                   .claim("username", subject.getAuthUsername())
+                   .claim("role", subject.getAuthUserRole())
+                   .setIssuedAt(new Date(now))
+                   .setExpiration(new Date(now + jwtConfig.getExpiration()))
+                   .signWith(jwtConfig.getSigningKey(), jwtConfig.getSigAlg())
+                   .compact();
 
     }
 
@@ -49,11 +49,19 @@ public class TokenService {
                                 .parseClaimsJws(token)
                                 .getBody();
 
-            return new Principal(claims.getId(), claims.get("role", String.class));
+            return new Principal(claims.getId(), claims.get("username", String.class), claims.get("role", String.class));
         } catch (ExpiredJwtException e) {
             throw new TokenParseException("The provided token is expired", e);
         } catch (Exception e) {
             throw new TokenParseException(e);
+        }
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            return extractTokenDetails(token) != null;
+        } catch (Exception e) {
+            return false;
         }
     }
 
