@@ -1,5 +1,6 @@
 package com.revature.taskmaster.auth.dtos;
 
+import com.revature.taskmaster.user.User;
 import com.revature.taskmaster.user.dtos.UserResponsePayload;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,14 @@ public class Principal {
         this.authUserId = authUserId;
         this.authUsername = authUsername;
         this.authUserRole = authUserRole;
+    }
+
+    public boolean isAdmin() {
+        return this.authUserRole.equals(User.Role.ADMIN.name());
+    }
+
+    public boolean ownsResource(String resourceOwnerId) {
+        return resourceOwnerId.equals(authUserId);
     }
 
 }
