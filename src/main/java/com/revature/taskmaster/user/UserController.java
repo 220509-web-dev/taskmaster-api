@@ -29,6 +29,7 @@ public class UserController {
     @AuthenticationRequired
     @GetMapping(produces = "application/json")
     public List<UserResponsePayload> findBy(@RequestParam Map<String, String> params) {
+        if (params.isEmpty()) return userService.fetchAllUsers();
         return userService.search(params);
     }
 
