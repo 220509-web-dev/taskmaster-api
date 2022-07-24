@@ -6,7 +6,6 @@ import com.revature.taskmaster.common.util.exceptions.MissingAuthTokenException;
 import com.revature.taskmaster.common.util.exceptions.TokenParseException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +15,11 @@ import java.util.Date;
 public class TokenService {
 
     private final JwtConfig jwtConfig;
+    private final AuthRepository authRepo;
 
-    public TokenService(JwtConfig jwtConfig) {
+    public TokenService(JwtConfig jwtConfig, AuthRepository authRepo) {
         this.jwtConfig = jwtConfig;
+        this.authRepo = authRepo;
     }
 
     public String generateToken(Principal subject) {
@@ -43,13 +44,19 @@ public class TokenService {
         }
 
         try {
+
             Claims claims = Jwts.parserBuilder()
                                 .setSigningKey(jwtConfig.getSigningKey())
                                 .build()
                                 .parseClaimsJws(token)
                                 .getBody();
 
+            if (!authRepo.existsById(claims.getId())) {
+                throw new TokenParseException("Unknown user id found in request token");
+            }
+
             return new Principal(claims.getId(), claims.get("username", String.class), claims.get("role", String.class));
+
         } catch (ExpiredJwtException e) {
             throw new TokenParseException("The provided token is expired", e);
         } catch (Exception e) {
@@ -57,13 +64,8 @@ public class TokenService {
         }
     }
 
-    public boolean isTokenValid(String token) {
-        try {
-            return extractTokenDetails(token) != null;
-        } catch (Exception e) {
-            return false;
-        }
+    public void checkToken(String token) throws TokenParseException {
+        extractTokenDetails(token);
     }
-
 
 }
