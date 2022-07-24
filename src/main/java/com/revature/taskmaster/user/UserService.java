@@ -44,10 +44,6 @@ public class UserService {
                        .collect(Collectors.toList());
     }
 
-    public boolean isKnownUserId(String userId) {
-        return userRepo.existsById(userId);
-    }
-
     public List<UserResponsePayload> search(Map<String, String> requestParamMap) {
         if (requestParamMap.isEmpty()) return fetchAllUsers();
         Set<User> matchingUsers = entitySearcher.searchForEntity(requestParamMap, User.class);
@@ -55,6 +51,10 @@ public class UserService {
         return matchingUsers.stream()
                             .map(UserResponsePayload::new)
                             .collect(Collectors.toList());
+    }
+
+    public boolean isKnownUserId(String userId) {
+        return userRepo.existsById(userId);
     }
 
     public boolean isUsernameAvailable(@Valid UsernameRequest request) {

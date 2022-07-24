@@ -23,6 +23,7 @@ public class AuthService {
 
     public Principal authenticateUserCredentials(@Valid AuthRequest authRequest) {
         return authRepo.findUserByUsernameAndPassword(authRequest.getUsername(), authRequest.getPassword())
+                       .filter(user -> user.getMetadata().isActive())
                        .map(UserResponsePayload::new)
                        .map(Principal::new)
                        .orElseThrow(AuthenticationException::new);
