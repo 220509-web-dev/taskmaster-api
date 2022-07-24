@@ -2,7 +2,7 @@ package com.revature.taskmaster.user;
 
 import com.revature.taskmaster.common.util.exceptions.InvalidRequestException;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
-import com.revature.taskmaster.common.util.web.security.AuthenticationRequired;
+import com.revature.taskmaster.common.util.web.security.Authenticated;
 import com.revature.taskmaster.user.dtos.EmailRequest;
 import com.revature.taskmaster.user.dtos.UserRequestPayload;
 import com.revature.taskmaster.user.dtos.UserResponsePayload;
@@ -26,7 +26,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @AuthenticationRequired
+    @Authenticated
     @GetMapping(produces = "application/json")
     public List<UserResponsePayload> findBy(@RequestParam Map<String, String> params) {
         if (params.isEmpty()) return userService.fetchAllUsers();
@@ -54,7 +54,7 @@ public class UserController {
         return userService.createUser(newUserInfo);
     }
 
-    @AuthenticationRequired
+    @Authenticated
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(consumes = "application/json")
     public void updateUserInfo(@RequestBody UserRequestPayload updatedUserInfo) {
@@ -67,7 +67,7 @@ public class UserController {
         userService.activateUser(id);
     }
 
-    @AuthenticationRequired
+    @Authenticated
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateUser(@RequestParam String id) {
