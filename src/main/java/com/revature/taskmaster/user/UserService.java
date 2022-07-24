@@ -1,6 +1,10 @@
 package com.revature.taskmaster.user;
 
+import com.revature.taskmaster.auth.dtos.Principal;
 import com.revature.taskmaster.common.datasource.EntitySearcher;
+import com.revature.taskmaster.common.util.exceptions.AuthorizationException;
+import com.revature.taskmaster.common.util.web.security.PreAuthorize;
+import com.revature.taskmaster.common.util.web.security.SecurityContext;
 import com.revature.taskmaster.common.util.web.validators.groups.OnCreate;
 import com.revature.taskmaster.common.util.web.validators.groups.OnUpdate;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
@@ -30,6 +34,7 @@ public class UserService {
 
     private final UserRepository userRepo;
     private final EntitySearcher entitySearcher;
+    private SecurityContext securityContext;
 
     @Autowired
     public UserService(UserRepository userRepo, EntitySearcher entitySearcher) {
@@ -37,6 +42,12 @@ public class UserService {
         this.entitySearcher = entitySearcher;
     }
 
+    @Autowired
+    public void setSecurityContext(SecurityContext securityContext) {
+        this.securityContext = securityContext;
+    }
+
+    @PreAuthorize(allowedRoles = {User.Role.ADMIN})
     public List<UserResponsePayload> fetchAllUsers() {
         return userRepo.findAll()
                        .stream()
@@ -45,12 +56,25 @@ public class UserService {
     }
 
     public List<UserResponsePayload> search(Map<String, String> requestParamMap) {
-        if (requestParamMap.isEmpty()) return fetchAllUsers();
+
+        if (requestParamMap.isEmpty()) {
+            fetchAllUsers();
+        }
+
         Set<User> matchingUsers = entitySearcher.searchForEntity(requestParamMap, User.class);
+
         if (matchingUsers.isEmpty()) throw new ResourceNotFoundException();
+
         return matchingUsers.stream()
+                            .peek(retrievedUser -> {
+                                Principal requester = securityContext.getRequester();
+                                if (!requester.isAdmin() && !requester.ownsResource(retrievedUser.getId())) {
+                                    throw new AuthorizationException();
+                                }
+                            })
                             .map(UserResponsePayload::new)
                             .collect(Collectors.toList());
+
     }
 
     public boolean isKnownUserId(String userId) {
@@ -96,6 +120,12 @@ public class UserService {
     @Validated(OnUpdate.class)
     public void updateUser(@Valid UserRequestPayload updatedUserRequest) {
 
+        Principal requester = securityContext.getRequester();
+
+        if (!requester.isAdmin() && requester.ownsResource(updatedUserRequest.getId())) {
+            throw new AuthorizationException();
+        }
+
         User updatedUser = updatedUserRequest.extractResource();
         User userForUpdate = userRepo.findById(updatedUser.getId()).orElseThrow(ResourceNotFoundException::new);
 
@@ -134,6 +164,13 @@ public class UserService {
     }
 
     public void deactivateUser(String userId) {
+
+        Principal requester = securityContext.getRequester();
+
+        if (!requester.isAdmin() && requester.ownsResource(userId)) {
+            throw new AuthorizationException();
+        }
+
         userRepo.findById(userId)
                 .orElseThrow(ResourceNotFoundException::new)
                 .getMetadata()
