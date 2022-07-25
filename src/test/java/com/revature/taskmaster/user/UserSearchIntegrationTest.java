@@ -1,6 +1,6 @@
 package com.revature.taskmaster.user;
 
-import com.revature.taskmaster.test_utils.MockTokenGenerator;
+import com.revature.taskmaster.test_utils.MockTokenFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,23 +20,23 @@ class UserSearchIntegrationTest {
 
     private final MockMvc mockMvc;
 
-    private final MockTokenGenerator mockTokenGenerator;
+    private final MockTokenFactory mockTokenFactory;
 
     private final String PATH = "/users";
 
     private final String CONTENT_TYPE = "application/json";
 
     @Autowired
-    public UserSearchIntegrationTest(MockMvc mockMvc, MockTokenGenerator mockTokenGenerator) {
+    public UserSearchIntegrationTest(MockMvc mockMvc, MockTokenFactory mockTokenFactory) {
         this.mockMvc = mockMvc;
-        this.mockTokenGenerator = mockTokenGenerator;
+        this.mockTokenFactory = mockTokenFactory;
     }
 
     @Test
     void test_userSearch_returnsOneUser_whenSearchingForKnownId_usingAdminToken() throws Exception {
         mockMvc.perform(
                     get(PATH)
-                        .header("Authorization", mockTokenGenerator.getAdminToken())
+                        .header("Authorization", mockTokenFactory.getAdminToken())
                         .param("id", "manager-user-id"))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -52,7 +52,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returnsOneUser_whenSearchingForKnownId_usingResourceOwnerToken() throws Exception {
         mockMvc.perform(
                    get(PATH)
-                       .header("Authorization", mockTokenGenerator.getManagerToken())
+                       .header("Authorization", mockTokenFactory.getManagerToken())
                        .param("id", "manager-user-id"))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -68,7 +68,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returnsOneUser_whenSearchingForKnownUsername_usingAdminToken() throws Exception {
         mockMvc.perform(
                     get(PATH)
-                        .header("Authorization", mockTokenGenerator.getAdminToken())
+                        .header("Authorization", mockTokenFactory.getAdminToken())
                         .param("username", "tester"))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -84,7 +84,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returnsOneUser_whenSearchingForKnownUsername_usingResourceOwnerToken() throws Exception {
         mockMvc.perform(
                    get(PATH)
-                       .header("Authorization", mockTokenGenerator.getTesterToken())
+                       .header("Authorization", mockTokenFactory.getTesterToken())
                        .param("username", "tester"))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -100,7 +100,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returnsOneUser_whenSearchingForKnownEmail_usingAdminToken() throws Exception {
         mockMvc.perform(
                     get(PATH)
-                        .header("Authorization", mockTokenGenerator.getAdminToken())
+                        .header("Authorization", mockTokenFactory.getAdminToken())
                         .param("emailAddress", "tester@revature.com"))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -116,7 +116,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returnsOneUser_whenSearchingForKnownEmail_usingResourceOwnerToken() throws Exception {
         mockMvc.perform(
                    get(PATH)
-                       .header("Authorization", mockTokenGenerator.getTesterToken())
+                       .header("Authorization", mockTokenFactory.getTesterToken())
                        .param("emailAddress", "tester@revature.com"))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -132,7 +132,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returnsSuccessfully_whenMultipleUsersAreFoundWithSearchParams_usingAdminToken() throws Exception {
         mockMvc.perform(
                     get(PATH)
-                        .header("Authorization", mockTokenGenerator.getAdminToken())
+                        .header("Authorization", mockTokenFactory.getAdminToken())
                        .param("role", "TESTER"))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -148,7 +148,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returns403_whenMultipleUsersAreFoundWithSearchParams_usingResourceOwnerToken() throws Exception {
         mockMvc.perform(
                        get(PATH)
-                               .header("Authorization", mockTokenGenerator.getTesterToken())
+                               .header("Authorization", mockTokenFactory.getTesterToken())
                                .param("role", "TESTER"))
                .andExpect(status().isForbidden())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -165,7 +165,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returnsSuccessfully_whenNoSearchParamsAreProvided_usingAdminToken() throws Exception {
         mockMvc.perform(
                     get(PATH)
-                        .header("Authorization", mockTokenGenerator.getAdminToken()))
+                        .header("Authorization", mockTokenFactory.getAdminToken()))
                .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -180,7 +180,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returnsSuccessfully_whenUsingSearchingUsingOfNestedField_usingAdminToken() throws Exception {
         mockMvc.perform(
                     get(PATH)
-                        .header("Authorization", mockTokenGenerator.getAdminToken())
+                        .header("Authorization", mockTokenFactory.getAdminToken())
                        .param("metadata.active", "false"))
                 .andExpect(status().isOk())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -195,7 +195,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returns404_whenNoUsersAreFoundWithSearchParams_usingAdminToken() throws Exception {
         mockMvc.perform(
                     get(PATH)
-                        .header("Authorization", mockTokenGenerator.getAdminToken())
+                        .header("Authorization", mockTokenFactory.getAdminToken())
                        .param("id", "unknown-user-id"))
                .andExpect(status().isNotFound())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -212,7 +212,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returns400_whenSearchParamsContainUnknownKey_usingAdminToken() throws Exception {
         mockMvc.perform(
                     get(PATH)
-                        .header("Authorization", mockTokenGenerator.getAdminToken())
+                        .header("Authorization", mockTokenFactory.getAdminToken())
                        .param("unknown", "invalid"))
                .andExpect(status().isBadRequest())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -259,7 +259,7 @@ class UserSearchIntegrationTest {
     void test_userSearch_returns401_whenSearchParamsAreProvided_usingBadToken() throws Exception {
         mockMvc.perform(
                    get(PATH)
-                       .header("Authorization", mockTokenGenerator.getUnknownUserToken())
+                       .header("Authorization", mockTokenFactory.getUnknownUserToken())
                        .param("id", "locked-used-id"))
                .andExpect(status().isUnauthorized())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -274,7 +274,7 @@ class UserSearchIntegrationTest {
 
     @Test
     void test_userSearch_returns403_whenNoSearchParamsAreProvided_usingNonAdminToken() throws Exception {
-        for (Map.Entry<User.Role, String> roleTokenEntry : mockTokenGenerator.getRoleTokens().entrySet()) {
+        for (Map.Entry<User.Role, String> roleTokenEntry : mockTokenFactory.getRoleTokens().entrySet()) {
             if (roleTokenEntry.getKey().equals(User.Role.ADMIN)) continue;
             mockMvc.perform(
                        get(PATH)
@@ -293,7 +293,7 @@ class UserSearchIntegrationTest {
 
     @Test
     void test_userSearch_returns403_whenSearchParamsAreProvided_usingNonAdminToken() throws Exception {
-        for (Map.Entry<User.Role, String> roleTokenEntry : mockTokenGenerator.getRoleTokens().entrySet()) {
+        for (Map.Entry<User.Role, String> roleTokenEntry : mockTokenFactory.getRoleTokens().entrySet()) {
             if (roleTokenEntry.getKey().equals(User.Role.ADMIN)) continue;
             mockMvc.perform(
                            get(PATH)

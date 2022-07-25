@@ -1,6 +1,6 @@
 package com.revature.taskmaster.user;
 
-import com.revature.taskmaster.test_utils.MockTokenGenerator;
+import com.revature.taskmaster.test_utils.MockTokenFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,16 +23,16 @@ class UserDeactivationIntegrationTest {
 
     private final MockMvc mockMvc;
     private final UserRepository userRepo;
-    private final MockTokenGenerator mockTokenGenerator;
+    private final MockTokenFactory mockTokenFactory;
     private final String PATH = "/users";
     private final String CONTENT_TYPE = "application/json";
     private static final String MOCK_USER_NOT_LOADED = "Test active user not found, check mock data inserter to ensure it inserts an active user";
 
     @Autowired
-    public UserDeactivationIntegrationTest(MockMvc mockMvc, UserRepository userRepo, MockTokenGenerator mockTokenGenerator) {
+    public UserDeactivationIntegrationTest(MockMvc mockMvc, UserRepository userRepo, MockTokenFactory mockTokenFactory) {
         this.mockMvc = mockMvc;
         this.userRepo = userRepo;
-        this.mockTokenGenerator = mockTokenGenerator;
+        this.mockTokenFactory = mockTokenFactory;
     }
 
     @Test
@@ -44,7 +44,7 @@ class UserDeactivationIntegrationTest {
 
         mockMvc.perform(
                     delete(PATH)
-                        .header("Authorization", mockTokenGenerator.getAdminToken())
+                        .header("Authorization", mockTokenFactory.getAdminToken())
                         .param("id", activeManagerUser.getId()))
                .andExpect(status().isNoContent())
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -67,7 +67,7 @@ class UserDeactivationIntegrationTest {
 
         mockMvc.perform(
                    delete(PATH)
-                       .header("Authorization", mockTokenGenerator.getTesterToken())
+                       .header("Authorization", mockTokenFactory.getTesterToken())
                        .param("id", activeTesterUser.getId()))
                .andExpect(status().isNoContent())
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -89,7 +89,7 @@ class UserDeactivationIntegrationTest {
 
         mockMvc.perform(
                    delete(PATH)
-                       .header("Authorization", mockTokenGenerator.getDevToken())
+                       .header("Authorization", mockTokenFactory.getDevToken())
                        .param("id", activeManagerUser.getId()))
                .andExpect(status().isForbidden())
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -110,7 +110,7 @@ class UserDeactivationIntegrationTest {
     void test_userDeactivation_returns404_givenUnknownUserId_usingAdminToken() throws Exception {
         mockMvc.perform(
                    delete(PATH)
-                       .header("Authorization", mockTokenGenerator.getAdminToken())
+                       .header("Authorization", mockTokenFactory.getAdminToken())
                        .param("id", "unknown-id"))
                .andExpect(status().isNotFound())
                .andExpect(header().string("content-type", CONTENT_TYPE))
@@ -125,7 +125,7 @@ class UserDeactivationIntegrationTest {
 
     @Test
     void test_userDeactivation_returns403_givenUnknownUserId_usingAnyNonAdminToken() throws Exception {
-        for (Map.Entry<User.Role, String> roleTokenEntries : mockTokenGenerator.getRoleTokens().entrySet()) {
+        for (Map.Entry<User.Role, String> roleTokenEntries : mockTokenFactory.getRoleTokens().entrySet()) {
             if (roleTokenEntries.getKey().equals(User.Role.ADMIN)) continue;
             mockMvc.perform(
                        delete(PATH)

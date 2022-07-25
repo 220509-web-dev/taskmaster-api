@@ -1,7 +1,7 @@
 package com.revature.taskmaster.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.taskmaster.test_utils.MockTokenGenerator;
+import com.revature.taskmaster.test_utils.MockTokenFactory;
 import com.revature.taskmaster.user.dtos.UserRequestPayload;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +22,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserUpdateIntegrationTest {
 
     private final MockMvc mockMvc;
-    private final MockTokenGenerator mockTokenGenerator;
+    private final MockTokenFactory mockTokenFactory;
     private final UserRepository userRepo;
     private final ObjectMapper jsonMapper;
     private final String PATH = "/users";
     private final String CONTENT_TYPE = "application/json";
 
     @Autowired
-    public UserUpdateIntegrationTest(MockMvc mockMvc, MockTokenGenerator mockTokenGenerator, UserRepository userRepo, ObjectMapper jsonMapper) {
+    public UserUpdateIntegrationTest(MockMvc mockMvc, MockTokenFactory mockTokenFactory, UserRepository userRepo, ObjectMapper jsonMapper) {
         this.mockMvc = mockMvc;
-        this.mockTokenGenerator = mockTokenGenerator;
+        this.mockTokenFactory = mockTokenFactory;
         this.userRepo = userRepo;
         this.jsonMapper = jsonMapper;
     }
@@ -51,7 +51,7 @@ class UserUpdateIntegrationTest {
 
         mockMvc.perform(
                     patch(PATH)
-                        .header("Authorization", mockTokenGenerator.getAdminToken())
+                        .header("Authorization", mockTokenFactory.getAdminToken())
                         .contentType(CONTENT_TYPE)
                         .content(jsonMapper.writeValueAsString(updatedUserRequest)))
                .andExpect(status().isNoContent())
@@ -85,7 +85,7 @@ class UserUpdateIntegrationTest {
 
         mockMvc.perform(
                    patch(PATH)
-                       .header("Authorization", mockTokenGenerator.getManagerToken())
+                       .header("Authorization", mockTokenFactory.getManagerToken())
                        .contentType(CONTENT_TYPE)
                        .content(jsonMapper.writeValueAsString(updatedUserRequest)))
                .andExpect(status().isNoContent())
@@ -117,7 +117,7 @@ class UserUpdateIntegrationTest {
 
         mockMvc.perform(
                    patch(PATH)
-                       .header("Authorization", mockTokenGenerator.getManagerToken())
+                       .header("Authorization", mockTokenFactory.getManagerToken())
                        .contentType(CONTENT_TYPE)
                        .content(jsonMapper.writeValueAsString(updatedUserRequest)))
                .andExpect(status().isConflict())
@@ -152,7 +152,7 @@ class UserUpdateIntegrationTest {
 
         mockMvc.perform(
                    patch(PATH)
-                       .header("Authorization", mockTokenGenerator.getManagerToken())
+                       .header("Authorization", mockTokenFactory.getManagerToken())
                        .contentType(CONTENT_TYPE)
                        .content(jsonMapper.writeValueAsString(updatedUserRequest)))
                .andExpect(status().isConflict())
@@ -188,7 +188,7 @@ class UserUpdateIntegrationTest {
 
         mockMvc.perform(
                    patch(PATH)
-                       .header("Authorization", mockTokenGenerator.getTesterToken())
+                       .header("Authorization", mockTokenFactory.getTesterToken())
                        .contentType(CONTENT_TYPE)
                        .content(jsonMapper.writeValueAsString(updatedUserRequest)))
                .andExpect(status().isForbidden())

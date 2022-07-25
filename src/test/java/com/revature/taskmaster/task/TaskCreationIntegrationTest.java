@@ -1,11 +1,9 @@
 package com.revature.taskmaster.task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.taskmaster.auth.TokenService;
-import com.revature.taskmaster.auth.dtos.Principal;
 import com.revature.taskmaster.common.dtos.ResourceCreationResponse;
 import com.revature.taskmaster.task.dtos.TaskRequestPayload;
-import com.revature.taskmaster.test_utils.MockTokenGenerator;
+import com.revature.taskmaster.test_utils.MockTokenFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,16 +28,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TaskCreationIntegrationTest {
 
     private final MockMvc mockMvc;
-    private final MockTokenGenerator mockTokenGenerator;
+    private final MockTokenFactory mockTokenFactory;
     private final TaskRepository taskRepo;
     private final ObjectMapper jsonMapper;
     private final String PATH = "/tasks";
     private final String CONTENT_TYPE = "application/json";
 
     @Autowired
-    public TaskCreationIntegrationTest(MockMvc mockMvc, MockTokenGenerator mockTokenGenerator, TaskRepository taskRepo, ObjectMapper jsonMapper) {
+    public TaskCreationIntegrationTest(MockMvc mockMvc, MockTokenFactory mockTokenFactory, TaskRepository taskRepo, ObjectMapper jsonMapper) {
         this.mockMvc = mockMvc;
-        this.mockTokenGenerator = mockTokenGenerator;
+        this.mockTokenFactory = mockTokenFactory;
         this.taskRepo = taskRepo;
         this.jsonMapper = jsonMapper;
     }
@@ -57,7 +55,7 @@ class TaskCreationIntegrationTest {
 
         MvcResult result = mockMvc.perform(
                                     post(PATH)
-                                        .header("Authorization", mockTokenGenerator.getDevToken())
+                                        .header("Authorization", mockTokenFactory.getDevToken())
                                         .contentType(CONTENT_TYPE)
                                         .content(jsonMapper.writeValueAsString(newTaskRequest)))
                                   .andExpect(status().isCreated())
@@ -89,7 +87,7 @@ class TaskCreationIntegrationTest {
 
         MvcResult result = mockMvc.perform(
                                     post(PATH)
-                                        .header("Authorization", mockTokenGenerator.getDevToken())
+                                        .header("Authorization", mockTokenFactory.getDevToken())
                                         .contentType(CONTENT_TYPE)
                                         .content(jsonMapper.writeValueAsString(newTaskRequest)))
                                   .andExpect(status().isCreated())
@@ -121,7 +119,7 @@ class TaskCreationIntegrationTest {
 
         mockMvc.perform(
                     post(PATH)
-                        .header("Authorization", mockTokenGenerator.getUnknownUserToken())
+                        .header("Authorization", mockTokenFactory.getUnknownUserToken())
                         .contentType(CONTENT_TYPE)
                         .content(jsonMapper.writeValueAsString(newTaskRequest)))
                .andExpect(status().isUnauthorized())
@@ -148,7 +146,7 @@ class TaskCreationIntegrationTest {
 
         mockMvc.perform(
                    post(PATH)
-                       .header("Authorization", mockTokenGenerator.getDevToken())
+                       .header("Authorization", mockTokenFactory.getDevToken())
                        .contentType(CONTENT_TYPE)
                        .content(jsonMapper.writeValueAsString(newTaskRequest)))
                .andExpect(status().isUnprocessableEntity())
@@ -175,7 +173,7 @@ class TaskCreationIntegrationTest {
 
         mockMvc.perform(
                    post(PATH)
-                       .header("Authorization", mockTokenGenerator.getDevToken())
+                       .header("Authorization", mockTokenFactory.getDevToken())
                        .contentType(CONTENT_TYPE)
                        .content(jsonMapper.writeValueAsString(newTaskRequest)))
                .andExpect(status().isBadRequest())

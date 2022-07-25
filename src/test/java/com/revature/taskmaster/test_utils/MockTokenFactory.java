@@ -10,13 +10,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class MockTokenGenerator {
+public class MockTokenFactory {
 
     private final Map<User.Role, String> roleTokens = new HashMap<>();
     private final String unknownUserToken;
 
     @Autowired
-    public MockTokenGenerator(TokenService tokenService) {
+    public MockTokenFactory(TokenService tokenService) {
         roleTokens.put(User.Role.ADMIN, tokenService.generateToken(new Principal("admin-user-id", "admin", "ADMIN")));
         roleTokens.put(User.Role.MANAGER, tokenService.generateToken(new Principal("manager-user-id", "manager", "MANAGER")));
         roleTokens.put(User.Role.DEV, tokenService.generateToken(new Principal("dev-user-id", "dev", "DEV")));
