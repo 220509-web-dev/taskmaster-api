@@ -24,15 +24,16 @@ class UserUpdateIntegrationTest {
     private final MockMvc mockMvc;
     private final MockTokenGenerator mockTokenGenerator;
     private final UserRepository userRepo;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper jsonMapper;
     private final String PATH = "/users";
     private final String CONTENT_TYPE = "application/json";
 
     @Autowired
-    public UserUpdateIntegrationTest(MockMvc mockMvc, MockTokenGenerator mockTokenGenerator, UserRepository userRepo) {
+    public UserUpdateIntegrationTest(MockMvc mockMvc, MockTokenGenerator mockTokenGenerator, UserRepository userRepo, ObjectMapper jsonMapper) {
         this.mockMvc = mockMvc;
         this.mockTokenGenerator = mockTokenGenerator;
         this.userRepo = userRepo;
+        this.jsonMapper = jsonMapper;
     }
 
     @Test
@@ -52,7 +53,7 @@ class UserUpdateIntegrationTest {
                     patch(PATH)
                         .header("Authorization", mockTokenGenerator.getAdminToken())
                         .contentType(CONTENT_TYPE)
-                        .content(objectMapper.writeValueAsString(updatedUserRequest)))
+                        .content(jsonMapper.writeValueAsString(updatedUserRequest)))
                .andExpect(status().isNoContent())
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
                .andExpect(header().string("Access-Control-Allow-Methods", "*"))
@@ -86,7 +87,7 @@ class UserUpdateIntegrationTest {
                    patch(PATH)
                        .header("Authorization", mockTokenGenerator.getManagerToken())
                        .contentType(CONTENT_TYPE)
-                       .content(objectMapper.writeValueAsString(updatedUserRequest)))
+                       .content(jsonMapper.writeValueAsString(updatedUserRequest)))
                .andExpect(status().isNoContent())
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
                .andExpect(header().string("Access-Control-Allow-Methods", "*"))
@@ -118,7 +119,7 @@ class UserUpdateIntegrationTest {
                    patch(PATH)
                        .header("Authorization", mockTokenGenerator.getManagerToken())
                        .contentType(CONTENT_TYPE)
-                       .content(objectMapper.writeValueAsString(updatedUserRequest)))
+                       .content(jsonMapper.writeValueAsString(updatedUserRequest)))
                .andExpect(status().isConflict())
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
                .andExpect(header().string("Access-Control-Allow-Methods", "*"))
@@ -153,7 +154,7 @@ class UserUpdateIntegrationTest {
                    patch(PATH)
                        .header("Authorization", mockTokenGenerator.getManagerToken())
                        .contentType(CONTENT_TYPE)
-                       .content(objectMapper.writeValueAsString(updatedUserRequest)))
+                       .content(jsonMapper.writeValueAsString(updatedUserRequest)))
                .andExpect(status().isConflict())
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
                .andExpect(header().string("Access-Control-Allow-Methods", "*"))
@@ -189,7 +190,7 @@ class UserUpdateIntegrationTest {
                    patch(PATH)
                        .header("Authorization", mockTokenGenerator.getTesterToken())
                        .contentType(CONTENT_TYPE)
-                       .content(objectMapper.writeValueAsString(updatedUserRequest)))
+                       .content(jsonMapper.writeValueAsString(updatedUserRequest)))
                .andExpect(status().isForbidden())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
