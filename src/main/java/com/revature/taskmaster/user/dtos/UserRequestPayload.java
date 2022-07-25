@@ -96,7 +96,7 @@ public class UserRequestPayload {
         }
 
         if (role == null) {
-            return new User(id, firstName, lastName, email, username, password, User.Role.LOCKED);
+            return new User(id, firstName, lastName, email, username, password, null);
         }
 
         return new User(id, firstName, lastName, email, username, password, User.Role.valueOf(role));
