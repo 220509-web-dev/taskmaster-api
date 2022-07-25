@@ -35,7 +35,7 @@ public class MockDataInserter implements CommandLineRunner {
         adminUser.setId("admin-user-id");
         adminUser.getMetadata().setActive(true);
 
-        User managerUser = new User("Manny", "Jerr", "manny@revature.com", "manny123", DEFAULT_PASSWORD, User.Role.MANAGER);
+        User managerUser = new User("Manny", "Jerr", "manny@revature.com", "manager", DEFAULT_PASSWORD, User.Role.MANAGER);
         managerUser.setId("manager-user-id");
         managerUser.getMetadata().setActive(true);
 
