@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
-@DirtiesContext
 @AutoConfigureMockMvc
 class UserDeactivationIntegrationTest {
 
@@ -37,6 +36,7 @@ class UserDeactivationIntegrationTest {
     }
 
     @Test
+    @DirtiesContext
     void test_userDeactivation_returns204_givenKnownUserId_usingAdminToken() throws Exception {
 
         User activeManagerUser = userRepo.findById("manager-user-id").orElse(null);
@@ -59,6 +59,7 @@ class UserDeactivationIntegrationTest {
     }
 
     @Test
+    @DirtiesContext
     void test_userDeactivation_returns204_givenKnownUserId_usingResourceOwnerToken() throws Exception {
 
         User activeTesterUser = userRepo.findById("tester-user-id").orElse(null);

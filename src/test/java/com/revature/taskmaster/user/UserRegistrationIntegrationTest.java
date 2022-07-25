@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@DirtiesContext
 @AutoConfigureMockMvc
 class UserRegistrationIntegrationTest {
 
@@ -35,6 +34,7 @@ class UserRegistrationIntegrationTest {
     }
 
     @Test
+    @DirtiesContext
     void test_registerUser_returns201_givenValidUserRequestPayload() throws Exception {
 
         UserRequestPayload newUserRequest = new UserRequestPayload();

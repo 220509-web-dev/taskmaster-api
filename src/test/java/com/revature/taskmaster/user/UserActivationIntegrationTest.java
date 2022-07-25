@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
-@DirtiesContext
 @AutoConfigureMockMvc
 class UserActivationIntegrationTest {
 
@@ -33,6 +32,7 @@ class UserActivationIntegrationTest {
     }
 
     @Test
+    @DirtiesContext
     void test_userActivation_returns204_givenKnownUserId() throws Exception {
 
         User inactiveUser = userRepo.findById("inactive-user-id").orElse(null);
