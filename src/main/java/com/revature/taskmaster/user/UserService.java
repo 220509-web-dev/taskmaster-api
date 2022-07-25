@@ -57,10 +57,6 @@ public class UserService {
 
     public List<UserResponsePayload> search(Map<String, String> requestParamMap) {
 
-        if (requestParamMap.isEmpty()) {
-            fetchAllUsers();
-        }
-
         Set<User> matchingUsers = entitySearcher.searchForEntity(requestParamMap, User.class);
 
         if (matchingUsers.isEmpty()) throw new ResourceNotFoundException();
@@ -122,7 +118,7 @@ public class UserService {
 
         Principal requester = securityContext.getRequester();
 
-        if (!requester.isAdmin() && requester.ownsResource(updatedUserRequest.getId())) {
+        if (!requester.isAdmin() && !requester.ownsResource(updatedUserRequest.getId())) {
             throw new AuthorizationException();
         }
 
@@ -167,7 +163,7 @@ public class UserService {
 
         Principal requester = securityContext.getRequester();
 
-        if (!requester.isAdmin() && requester.ownsResource(userId)) {
+        if (!requester.isAdmin() && !requester.ownsResource(userId)) {
             throw new AuthorizationException();
         }
 
