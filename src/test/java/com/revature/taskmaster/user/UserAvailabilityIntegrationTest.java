@@ -16,16 +16,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserAvailabilityIntegrationTest {
 
-    private final MockMvc mockMvc;
-
-    private final String PATH = "/users/availability";
-
-    private final String CONTENT_TYPE = "application/json";
-
     @Autowired
-    public UserAvailabilityIntegrationTest(MockMvc mockMvc) {
-        this.mockMvc = mockMvc;
-    }
+    private MockMvc mockMvc;
+    private final String PATH = "/users/availability";
+    private final String CONTENT_TYPE = "application/json";
 
     @Test
     void test_checkUsernameAvailability_returns204_givenValidAvailableUsername() throws Exception {
