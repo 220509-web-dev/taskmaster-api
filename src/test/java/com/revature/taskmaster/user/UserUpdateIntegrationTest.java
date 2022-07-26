@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.revature.taskmaster.test_utils.AssertionMessages.TEST_USER_NOT_FOUND;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,20 +22,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserUpdateIntegrationTest {
 
-    private final MockMvc mockMvc;
-    private final MockTokenFactory mockTokenFactory;
-    private final UserRepository userRepo;
-    private final ObjectMapper jsonMapper;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private MockTokenFactory mockTokenFactory;
+    @Autowired
+    private UserRepository userRepo;
+    @Autowired
+    private ObjectMapper jsonMapper;
     private final String PATH = "/users";
     private final String CONTENT_TYPE = "application/json";
-
-    @Autowired
-    public UserUpdateIntegrationTest(MockMvc mockMvc, MockTokenFactory mockTokenFactory, UserRepository userRepo, ObjectMapper jsonMapper) {
-        this.mockMvc = mockMvc;
-        this.mockTokenFactory = mockTokenFactory;
-        this.userRepo = userRepo;
-        this.jsonMapper = jsonMapper;
-    }
 
     @Test
     @DirtiesContext
@@ -113,7 +110,7 @@ class UserUpdateIntegrationTest {
         updatedUserRequest.setEmail("tester@revature.com");
 
         User userBeforeUpdate = userRepo.findById(updatedUserRequest.getId()).orElse(null);
-        assertNotNull(userBeforeUpdate);
+        assertNotNull(userBeforeUpdate, TEST_USER_NOT_FOUND);
 
         mockMvc.perform(
                    patch(PATH)
@@ -148,7 +145,7 @@ class UserUpdateIntegrationTest {
         updatedUserRequest.setUsername("tester");
 
         User userBeforeUpdate = userRepo.findById(updatedUserRequest.getId()).orElse(null);
-        assertNotNull(userBeforeUpdate);
+        assertNotNull(userBeforeUpdate, TEST_USER_NOT_FOUND);
 
         mockMvc.perform(
                    patch(PATH)
@@ -184,7 +181,7 @@ class UserUpdateIntegrationTest {
         updatedUserRequest.setLastName("Updated");
 
         User userBeforeUpdate = userRepo.findById(updatedUserRequest.getId()).orElse(null);
-        assertNotNull(userBeforeUpdate);
+        assertNotNull(userBeforeUpdate, TEST_USER_NOT_FOUND);
 
         mockMvc.perform(
                    patch(PATH)

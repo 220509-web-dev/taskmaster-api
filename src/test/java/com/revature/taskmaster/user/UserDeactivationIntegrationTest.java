@@ -1,6 +1,7 @@
 package com.revature.taskmaster.user;
 
 import com.revature.taskmaster.test_utils.MockTokenFactory;
+import com.revature.taskmaster.test_utils.MockUserFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Map;
 
+import static com.revature.taskmaster.test_utils.AssertionMessages.TEST_USER_NOT_FOUND;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,26 +23,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserDeactivationIntegrationTest {
 
-    private final MockMvc mockMvc;
-    private final UserRepository userRepo;
-    private final MockTokenFactory mockTokenFactory;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private UserRepository userRepo;
+    @Autowired
+    private MockTokenFactory mockTokenFactory;
+    @Autowired
+    private MockUserFactory mockUserFactory;
     private final String PATH = "/users";
     private final String CONTENT_TYPE = "application/json";
-    private static final String MOCK_USER_NOT_LOADED = "Test active user not found, check mock data inserter to ensure it inserts an active user";
-
-    @Autowired
-    public UserDeactivationIntegrationTest(MockMvc mockMvc, UserRepository userRepo, MockTokenFactory mockTokenFactory) {
-        this.mockMvc = mockMvc;
-        this.userRepo = userRepo;
-        this.mockTokenFactory = mockTokenFactory;
-    }
 
     @Test
     @DirtiesContext
     void test_userDeactivation_returns204_givenKnownUserId_usingAdminToken() throws Exception {
 
-        User activeManagerUser = userRepo.findById("manager-user-id").orElse(null);
-        assertNotNull(activeManagerUser, MOCK_USER_NOT_LOADED);
+        User activeManagerUser = mockUserFactory.getMockUserByRole(User.Role.MANAGER);
+        assertNotNull(activeManagerUser, TEST_USER_NOT_FOUND);
 
         mockMvc.perform(
                     delete(PATH)
@@ -62,8 +61,8 @@ class UserDeactivationIntegrationTest {
     @DirtiesContext
     void test_userDeactivation_returns204_givenKnownUserId_usingResourceOwnerToken() throws Exception {
 
-        User activeTesterUser = userRepo.findById("tester-user-id").orElse(null);
-        assertNotNull(activeTesterUser, MOCK_USER_NOT_LOADED);
+        User activeTesterUser = mockUserFactory.getMockUserByRole(User.Role.TESTER);
+        assertNotNull(activeTesterUser, TEST_USER_NOT_FOUND);
 
         mockMvc.perform(
                    delete(PATH)
@@ -84,8 +83,8 @@ class UserDeactivationIntegrationTest {
     @Test
     void test_userDeactivation_returns403_givenKnownUserId_usingNonResourceOwnerToken() throws Exception {
 
-        User activeManagerUser = userRepo.findById("manager-user-id").orElse(null);
-        assertNotNull(activeManagerUser, MOCK_USER_NOT_LOADED);
+        User activeManagerUser = mockUserFactory.getMockUserByRole(User.Role.MANAGER);
+        assertNotNull(activeManagerUser, TEST_USER_NOT_FOUND);
 
         mockMvc.perform(
                    delete(PATH)

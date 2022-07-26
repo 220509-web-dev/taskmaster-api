@@ -18,19 +18,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserSearchIntegrationTest {
 
-    private final MockMvc mockMvc;
-
-    private final MockTokenFactory mockTokenFactory;
-
-    private final String PATH = "/users";
-
-    private final String CONTENT_TYPE = "application/json";
-
     @Autowired
-    public UserSearchIntegrationTest(MockMvc mockMvc, MockTokenFactory mockTokenFactory) {
-        this.mockMvc = mockMvc;
-        this.mockTokenFactory = mockTokenFactory;
-    }
+    private MockMvc mockMvc;
+    @Autowired
+    private MockTokenFactory mockTokenFactory;
+    private final String PATH = "/users";
+    private final String CONTENT_TYPE = "application/json";
 
     @Test
     void test_userSearch_returnsOneUser_whenSearchingForKnownId_usingAdminToken() throws Exception {

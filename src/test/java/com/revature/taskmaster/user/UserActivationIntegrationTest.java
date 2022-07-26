@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.revature.taskmaster.test_utils.AssertionMessages.TEST_USER_NOT_FOUND;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -35,7 +36,7 @@ class UserActivationIntegrationTest {
     void test_userActivation_returns204_givenKnownUserId() throws Exception {
 
         User inactiveUser = mockUserFactory.getInactiveUser();
-        assertNotNull(inactiveUser, "Test inactive user not found, check the mock data inserter to ensure it inserts an inactive user");
+        assertNotNull(inactiveUser, TEST_USER_NOT_FOUND);
 
         mockMvc.perform(
                     patch(PATH).

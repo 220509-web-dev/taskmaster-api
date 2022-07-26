@@ -20,8 +20,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserRegistrationIntegrationTest {
 
+    @Autowired
     private final MockMvc mockMvc;
+    @Autowired
     private final ObjectMapper jsonMapper;
+    @Autowired
     private final UserRepository userRepo;
     private final String PATH = "/users";
     private final String CONTENT_TYPE = "application/json";
@@ -44,9 +47,10 @@ class UserRegistrationIntegrationTest {
         newUserRequest.setUsername("valid-user");
         newUserRequest.setPassword("Revature1!");
 
-        String requestPayload = jsonMapper.writeValueAsString(newUserRequest);
-
-        mockMvc.perform(post(PATH).contentType(CONTENT_TYPE).content(requestPayload))
+        mockMvc.perform(
+                    post(PATH)
+                       .contentType(CONTENT_TYPE)
+                       .content(jsonMapper.writeValueAsString(newUserRequest)))
                .andExpect(status().isCreated())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -69,9 +73,10 @@ class UserRegistrationIntegrationTest {
         newUserRequest.setUsername("sa");
         newUserRequest.setPassword("invalid");
 
-        String requestPayload = jsonMapper.writeValueAsString(newUserRequest);
-
-        mockMvc.perform(post(PATH).contentType(CONTENT_TYPE).content(requestPayload))
+        mockMvc.perform(
+                    post(PATH)
+                       .contentType(CONTENT_TYPE)
+                       .content(jsonMapper.writeValueAsString(newUserRequest)))
                .andExpect(status().isBadRequest())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -100,9 +105,10 @@ class UserRegistrationIntegrationTest {
         newUserRequest.setUsername("tester");
         newUserRequest.setPassword("Revature1!");
 
-        String requestPayload = jsonMapper.writeValueAsString(newUserRequest);
-
-        mockMvc.perform(post(PATH).contentType(CONTENT_TYPE).content(requestPayload))
+        mockMvc.perform(
+                    post(PATH)
+                       .contentType(CONTENT_TYPE)
+                       .content(jsonMapper.writeValueAsString(newUserRequest)))
                .andExpect(status().isConflict())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -127,9 +133,10 @@ class UserRegistrationIntegrationTest {
         newUserRequest.setUsername("available-username");
         newUserRequest.setPassword("Revature1!");
 
-        String requestPayload = jsonMapper.writeValueAsString(newUserRequest);
-
-        mockMvc.perform(post(PATH).contentType(CONTENT_TYPE).content(requestPayload))
+        mockMvc.perform(
+                post(PATH)
+                       .contentType(CONTENT_TYPE)
+                       .content(jsonMapper.writeValueAsString(newUserRequest)))
                .andExpect(status().isConflict())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
