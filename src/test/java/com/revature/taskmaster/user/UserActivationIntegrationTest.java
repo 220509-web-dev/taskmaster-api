@@ -25,7 +25,6 @@ class UserActivationIntegrationTest {
     private MockMvc mockMvc;
     @Autowired
     private UserRepository userRepo;
-
     @Autowired
     private MockUserFactory mockUserFactory;
     private final String PATH = "/users/activation";

@@ -29,8 +29,9 @@ class UserAvailabilityIntegrationTest {
 
     @Test
     void test_checkUsernameAvailability_returns204_givenValidAvailableUsername() throws Exception {
-        String availableUsername = "available-username";
-        mockMvc.perform(get(PATH + "?username=" + availableUsername))
+        mockMvc.perform(
+                    get(PATH).
+                        param("username", "available-username"))
                .andExpect(status().isNoContent())
                .andExpect(header().doesNotExist("content-type"))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -41,8 +42,9 @@ class UserAvailabilityIntegrationTest {
 
     @Test
     void test_checkUsernameAvailability_returns409_givenValidUnavailableUsername() throws Exception {
-        String unavailableUsername = "tester";
-        mockMvc.perform(get(PATH + "?username=" + unavailableUsername))
+        mockMvc.perform(
+                    get(PATH).
+                        param("username", "tester"))
               .andExpect(status().isConflict())
               .andExpect(header().doesNotExist("content-type"))
               .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -53,8 +55,9 @@ class UserAvailabilityIntegrationTest {
 
     @Test
     void test_checkEmailAvailability_returns204_givenValidAvailableEmail() throws Exception {
-        String availableEmail = "available-email@revature.com";
-        mockMvc.perform(get(PATH + "?email=" + availableEmail))
+        mockMvc.perform(
+                    get(PATH)
+                        .param("email", "available-email@revature.com"))
                .andExpect(status().isNoContent())
                .andExpect(header().doesNotExist("content-type"))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -65,8 +68,9 @@ class UserAvailabilityIntegrationTest {
 
     @Test
     void test_checkEmailAvailability_returns409_givenValidUnavailableEmail() throws Exception {
-        String unavailableEmail = "tester@revature.com";
-        mockMvc.perform(get(PATH + "?email=" + unavailableEmail))
+        mockMvc.perform(
+                    get(PATH)
+                       .param("email", "tester@revature.com"))
                .andExpect(status().isConflict())
                .andExpect(header().doesNotExist("content-type"))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -92,7 +96,9 @@ class UserAvailabilityIntegrationTest {
     @Test
     void test_checkUsernameAvailability_returns400_givenInvalidUsername() throws Exception {
         String invalidUsername = "t";
-        mockMvc.perform(get(PATH + "?username=" + invalidUsername))
+        mockMvc.perform(
+                    get(PATH)
+                        .param("username", "t"))
                .andExpect(status().isBadRequest())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
@@ -106,8 +112,9 @@ class UserAvailabilityIntegrationTest {
 
     @Test
     void test_checkEmailAvailability_returns400_givenInvalidEmail() throws Exception {
-        String invalidEmail = "not an email";
-        mockMvc.perform(get(PATH + "?email=" + invalidEmail))
+        mockMvc.perform(
+                    get(PATH)
+                       .param("email", "not an email"))
                .andExpect(status().isBadRequest())
                .andExpect(header().string("content-type", CONTENT_TYPE))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
