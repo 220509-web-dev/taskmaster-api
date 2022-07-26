@@ -10,9 +10,9 @@ import java.util.UUID;
 /**
  * Represents a user record within the data source
  */
-@Entity // tells our ORM (Object Relational Mapper; in our case is Hibernate) that this is an object that maps to a relational entity
-@Table(name = "users") // optional annotation, used to specify a different name for the table that this entity maps to (otherwise it uses the class name)
-public class User extends Resource implements Comparable<User> {
+@Entity
+@Table(name = "users")
+public class User extends Resource {
 
     /** The given name of the user - must not be null or empty */
     @Column(name = "first_name", nullable = false)
@@ -118,22 +118,6 @@ public class User extends Resource implements Comparable<User> {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    /**
-     * Users are compared by their ids.
-     *
-     * @param o the object to be compared.
-     * @return
-     */
-    @Override
-    public int compareTo(User o) {
-        if (this == o) return 0;
-        if (getId() != null) {
-            return getId().compareTo(o.getId());
-        } else {
-            return -1;
-        }
     }
 
     @Override
