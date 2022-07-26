@@ -1,5 +1,6 @@
 package com.revature.taskmaster.user;
 
+import com.revature.taskmaster.test_utils.MockUserFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,25 +21,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserActivationIntegrationTest {
 
-    private final MockMvc mockMvc;
-    private final UserRepository userRepo;
-    private final String PATH = "/users/activation";
-    private final String CONTENT_TYPE = "application/json";
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private UserRepository userRepo;
 
     @Autowired
-    public UserActivationIntegrationTest(MockMvc mockMvc, UserRepository userRepo) {
-        this.mockMvc = mockMvc;
-        this.userRepo = userRepo;
-    }
+    private MockUserFactory mockUserFactory;
+    private final String PATH = "/users/activation";
+    private final String CONTENT_TYPE = "application/json";
 
     @Test
     @DirtiesContext
     void test_userActivation_returns204_givenKnownUserId() throws Exception {
 
-        User inactiveUser = userRepo.findById("inactive-user-id").orElse(null);
-        assertNotNull(inactiveUser, "Test inactive user not found, check mock data inserter to ensure it inserts an inactive user");
+        User inactiveUser = mockUserFactory.getInactiveUser();
+        assertNotNull(inactiveUser, "Test inactive user not found, check the mock data inserter to ensure it inserts an inactive user");
 
-        mockMvc.perform(patch(PATH + "?id=" + inactiveUser.getId()))
+        mockMvc.perform(
+                    patch(PATH).
+                        param("id", inactiveUser.getId()))
                .andExpect(status().isNoContent())
                .andExpect(header().doesNotExist("content-type"))
                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
