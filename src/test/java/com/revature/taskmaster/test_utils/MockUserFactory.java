@@ -13,28 +13,35 @@ import java.util.Map;
 @Component
 public class MockUserFactory {
 
-    private final Map<String, User> mockUsers = new HashMap<>();
+    private final UserRepository userRepo;
 
     @Autowired
     public MockUserFactory(UserRepository userRepo) {
-        this.mockUsers.put(User.Role.ADMIN.name(), userRepo.findById("admin-user-id").orElse(null));
-        this.mockUsers.put(User.Role.MANAGER.name(), userRepo.findById("manager-user-id").orElse(null));
-        this.mockUsers.put(User.Role.DEV.name(), userRepo.findById("dev-user-id").orElse(null));
-        this.mockUsers.put(User.Role.TESTER.name(), userRepo.findById("tester-user-id").orElse(null));
-        this.mockUsers.put(User.Role.LOCKED.name(), userRepo.findById("locked-user-id").orElse(null));
-        this.mockUsers.put("INACTIVE", userRepo.findById("inactive-user-id").orElse(null));
+        this.userRepo = userRepo;
     }
 
     public List<User> getAllMockUsers() {
-        return new ArrayList<>(mockUsers.values());
+        return this.userRepo.findAll();
     }
 
     public User getMockUserByRole(User.Role role) {
-        return this.mockUsers.get(role.name());
+        switch (role) {
+            case ADMIN:
+                return userRepo.findById("admin-user-id").orElse(null);
+            case MANAGER:
+                return userRepo.findById("manager-user-id").orElse(null);
+            case DEV:
+                return userRepo.findById("dev-user-id").orElse(null);
+            case TESTER:
+                return userRepo.findById("tester-user-id").orElse(null);
+            case LOCKED:
+                return userRepo.findById("locked-user-id").orElse(null);
+        }
+        return null;
     }
 
     public User getInactiveUser() {
-        return this.mockUsers.get("INACTIVE");
+        return userRepo.findById("inactive-user-id").orElse(null);
     }
 
 }
